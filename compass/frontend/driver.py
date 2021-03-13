@@ -24,6 +24,7 @@ from compass.ast import Tree  # Used for type hints
 # The codegen functions for the different targets.
 from compass.codegen.compass import codegen_tree as codegen_compass
 from compass.codegen.c import codegen_tree as codegen_c
+from compass.codegen.header import codegen_tree as codegen_header
 
 ################################### CLASSES ####################################
 
@@ -52,8 +53,10 @@ def compass_compile(source_code: str, target: str) -> str:
     # The we turn the AST into source code using the right codegen based on the provided target.
     if target == "compass":
         return codegen_compass(ast)
-    elif target == "C":
+    elif target in ["C", "c"]:
         return codegen_c(ast)
+    elif target in ["H", 'h', "header"]:
+        return codegen_header(ast)
     else:
         raise ValueError(f"Unknown target {target}")
 
