@@ -7,7 +7,7 @@ module abro(input A, input B, input R, output O) {
 				await B;
 			};
 			emit O;
-		};
-	};
+		}
+	}
 }
 

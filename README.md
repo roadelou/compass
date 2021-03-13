@@ -17,8 +17,8 @@ module abro(input A, input B, input R, output O) {
                 await B;
             };
             emit O;
-        };
-    };
+        }
+    }
 }
 ```
 
@@ -42,7 +42,15 @@ Once the compiler is installed, it can be used from the terminal through the `co
 ```bash
 # This will output a C file called abro_compass.cmps
 compass abro.cmps
+# To compile the header file to use the C code.
+compass --lang header abro.cmps
+# To compile a CLI interface to test the module.
+compass --lang debug abro.cmps
 ```
+
+# Examples
+
+Some examples of the language can be found in the [examples](https://github.com/roadelou/compass/examples) folder.
 
 ### METADATA
 

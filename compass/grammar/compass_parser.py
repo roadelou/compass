@@ -29,14 +29,15 @@ class CompassParser(Parser):
     Parser for the Compass language, used to build the AST from the tokenized
     source code.
     """
-
     # The tokens for the Compass language.
     tokens = compass_tokens.tokens
 
     # The only precedence rule is that <- should go before emit.
     precedence = (
-        ("left", EMIT, AWAIT, MODULE, INPUT, OUTPUT, EACH, SEQ, PAR),
-        ("left", ASSIGN),
+        ("nonassoc", MODULE, INPUT, OUTPUT, EACH, EMIT, AWAIT, SEQ, PAR),
+        ("left", ","),  # , is left associative, to solve conflicts
+        ("left", ";"),  # , is left associative, to solve conflicts
+        ("nonassoc", ASSIGN),
     )
 
     # The final rule, which returns an AST from the Module.
@@ -70,7 +71,7 @@ class CompassParser(Parser):
         return [ast.OutputDeclaration(p.signal)]
 
     # Creating a loop each statement from a reset Signal + Statement body.
-    @_('EACH signal "{" statement "}" ";"')
+    @_('EACH signal "{" statement "}"')
     def statement(self, p):
         # Creating an Each statement.
         return ast.Each(p.signal, p.statement)
@@ -81,27 +82,34 @@ class CompassParser(Parser):
         return [p.statement]
 
     # Merging two adjacent lists of statement.
-    @_("list_statement list_statement")
+    @_("list_statement \";\" list_statement")
     def list_statement(self, p):
         return p.list_statement0 + p.list_statement1
 
+    # Rule to resolve the optionnal last semi-colon for the last statement of a
+    # list.
+    @_("list_statement \";\"")
+    def list_statement(self, p):
+        return p.list_statement
+
+
     # Creating a sequential statement from a scoped list of statements.
-    @_('SEQ "{" list_statement "}" ";"')
+    @_('SEQ "{" list_statement "}"')
     def statement(self, p):
         return ast.Seq(p.list_statement)
 
     # Creating a parallel statement from a scoped list of statement.
-    @_('PAR "{" list_statement "}" ";"')
+    @_('PAR "{" list_statement "}"')
     def statement(self, p):
         return ast.Par(p.list_statement)
 
     # Creating an await from a signal.
-    @_('AWAIT signal ";"')
+    @_('AWAIT signal')
     def statement(self, p):
         return ast.AwaitStatement(p.signal)
 
     # Creating an emit from an expression.
-    @_('EMIT expression ";"')
+    @_('EMIT expression')
     def statement(self, p):
         return ast.EmitStatement(p.expression)
 
