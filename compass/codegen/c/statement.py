@@ -102,7 +102,7 @@ def codegen_each(
     indent_str = "\t" * indent
     # We build the code for the inner body of the for-each loop.
     inner_body, inner_immediate, inner_states = codegen_statement(
-        statement.statement, indent + 1
+        statement.statement, indent
     )
     # for-each statements don't use the inner_immediate states in any particular way.
     owned_states = inner_states
@@ -112,12 +112,11 @@ def codegen_each(
     for state in owned_states:
         source_code += indent_str + "\t" + f"{state} = 0;\n"
     # Closing the reset statement and beginning the statement of the body.
-    source_code += indent_str + f"}} else {{\n"
+    source_code += indent_str + "}\n"
     # Adding the code for the inner body.
     source_code += inner_body
-    # closing the main statement.
-    source_code += f"{indent_str}}}\n"
-    # Returning the source code, the immediate states and the owned states. Note that an each loop never ends.
+    # Returning the source code, the immediate states and the owned states. Note
+    # that an each loop never ends.
     return source_code, "0", owned_states
 
 
@@ -132,8 +131,6 @@ def codegen_seq(statement: ast.Seq, indent: int) -> Tuple[str, str, List[str]]:
     seq_state = SSAGenerator.new_name("seq")
     # Used to keep track of all the owned states.
     owned_states: List[str] = [seq_state]
-    # We switch on the current state to know which body we should be investigating.
-    source_code += f"{indent_str}switch({seq_state}) {{\n"
     # We build some code for each of the inner sequential statements.
     for index, inner_statement in enumerate(statement.statements):
         # We build the code for the inner body of the seq statement.
@@ -142,8 +139,9 @@ def codegen_seq(statement: ast.Seq, indent: int) -> Tuple[str, str, List[str]]:
         )
         # We keep track of all the states owned by our seq statement.
         owned_states += inner_states
-        # We add the code for the case.
-        source_code += indent_str + f"case {index}:\n"
+        # We add the code for the case. Note that we always use ifs (and never
+        # else) to fall to the next case whenever possible.
+        source_code += indent_str + f"if ({seq_state} == {index}) {{\n"
         # We add the source code for the statement executed sequentially.
         source_code += inner_body
         # EDGE CASE
@@ -156,10 +154,8 @@ def codegen_seq(statement: ast.Seq, indent: int) -> Tuple[str, str, List[str]]:
             source_code += (
                 indent_str + "\t" + f"{seq_state} += {inner_immediate};\n"
             )
-        # We add a break for the case.
-        source_code += indent_str + "\t" + "break;\n"
-    # We close the switch statement.
-    source_code += indent_str + "}\n"
+        # Closing the if statement.
+        source_code += indent_str + "}\n"
     # We return the expected source code. The single immediate state of a seq
     # statement is whether it reached its last state.
     return (
