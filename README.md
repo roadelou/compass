@@ -42,11 +42,11 @@ A [PyPi package](https://pypi.org/project/roadelou-compass/) is also available f
 Once the compiler is installed, it can be used from the terminal through the `compass` command. Basic usage is :arrow_down_small:
 
 ```bash
-# This will output a C file called abro_compass.cmps
+# This will output a C file called abro_compass.c
 compass abro.cmps
-# To compile the header file to use the C code.
+# To compile the header file to use the C code
 compass --lang header abro.cmps
-# To compile a CLI interface to test the module.
+# To compile a CLI interface to test the module
 compass --lang debug abro.cmps
 ```
 
