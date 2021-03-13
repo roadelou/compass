@@ -31,6 +31,10 @@ def main():
     """
     Calls the setup function to define the python package.
     """
+    # Reading the long description from the README file.
+    with open("README.md", "r") as readme_file:
+        readme_content = readme_file.read()
+
     setup(
         name="roadelou-compass",
         version="0.0.1",
@@ -54,6 +58,17 @@ def main():
         [console_scripts]
         compass=compass.frontend:command_line
         """,
+        description="Simple synchronous programming language",
+        long_description=readme_content,
+        long_description_content_type="text/markdown",
+        url="https://github.com/roadelou/compass",
+        classifiers=[
+            "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+            "Operating System :: POSIX :: Linux",
+            "Topic :: Software Development :: Compilers",
+            "Topic :: Software Development :: Code Generators",
+            "Topic :: System :: Hardware",
+        ]
     )
 
 

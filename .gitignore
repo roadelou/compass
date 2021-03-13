@@ -8,3 +8,6 @@ env
 .tox
 # Pip cache
 *.egg-info
+# PyPi distribution directories
+build
+dist
