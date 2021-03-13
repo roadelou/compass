@@ -2,7 +2,7 @@
 
 > Disclaimer: This is a personal side-project
 
-__Compass__ is a small programming language with strong inpiration from [Esterel](https://en.wikipedia.org/wiki/Esterel). It is a _synchronous programming language_ meant to build finite state machines easily for your C code.
+__Compass__ :compass: is a small programming language with strong inpiration from [Esterel](https://en.wikipedia.org/wiki/Esterel). It is a _synchronous programming language_ meant to build finite state machines easily for your C code.
 
 Unlike Esterel, Compass is very bare bones and uses a rather trivial compilation process, which can lead to very different behaviours for code that looks similar.
 
