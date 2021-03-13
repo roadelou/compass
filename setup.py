@@ -32,7 +32,7 @@ def main():
     Calls the setup function to define the python package.
     """
     setup(
-        name="compass",
+        name="roadelou-compass",
         version="0.0.1",
         author="roadelou",
         author_email="",
