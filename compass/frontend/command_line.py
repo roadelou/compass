@@ -78,7 +78,7 @@ def build_frontend_parser() -> argparse.ArgumentParser:
         "--lang",
         dest="LANG",
         default="C",
-        choices=["compass", "C", "c", "H", "h", "header"],
+        choices=["compass", "C", "c", "H", "h", "header", "debug"],
         type=str,
         help="The language to compile for",
     )
@@ -95,15 +95,17 @@ def default_output(source_path: str, language: str) -> str:
     path_prefix, _ = os.path.splitext(source_path)
     # Getting the extension based on the language used.
     if language in ["C", "c"]:
-        extension = "c"
+        extension = ".c"
     elif language == "compass":
-        extensions = "cmps"
+        extension = ".cmps"
     elif language in ["H", "h", "header"]:
-        extensions = "h"
+        extension = ".h"
+    elif language == "debug":
+        extension = ".debug.c"
     else:
         raise ValueError(f"Unknown Language {language}")
     # Returning the expected output path.
-    return path_prefix + "_compass." + extension
+    return path_prefix + "_compass" + extension
 
 
 ##################################### MAIN #####################################
