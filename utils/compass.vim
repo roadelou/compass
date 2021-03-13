@@ -3,6 +3,9 @@
 " Creation date: 13-03-2021
 " Language: Vim Script
 
+" Depending how your setup is organized, you might need to add the following
+" line somewhere in your configuration.
+" au! BufRead,BufNewFile *.cmps set filetype=compass
 
 " Quit when a syntax file was already loaded.
 if exists("b:current_syntax")
