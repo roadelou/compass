@@ -35,6 +35,8 @@ cd compass
 pip3 install .
 ``` 
 
+A [PyPi package](https://pypi.org/project/roadelou-compass/) is also available for the compiler, and it can be installed with `pip3 install roadelou_compass` :tada:
+
 # Usage
 
 Once the compiler is installed, it can be used from the terminal through the `compass` command. Basic usage is :arrow_down_small:
