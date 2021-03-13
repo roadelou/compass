@@ -7,5 +7,5 @@ WORKDIR /usr/src/app
 COPY . .
 # Installing compass as a package
 RUN pip3 install .
-# Going back to the HOME for any manipulations the user could desire...
-WORKDIR /root
+# Going to the examples folder to test the compilation
+WORKDIR /usr/src/app/examples
