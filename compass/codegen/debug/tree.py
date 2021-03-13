@@ -33,7 +33,7 @@ int next_word(char *buffer, size_t buffer_size) {
     size_t cursor = 0;
     int next_char;
     int working = 1;
-    while (((next_char = getchar()) != EOF) && working) {
+    while (working && ((next_char = getchar()) != EOF)) {
         switch (next_char) {
             case '\\n':
             case ' ':
@@ -42,7 +42,7 @@ int next_word(char *buffer, size_t buffer_size) {
                 break;
             default:
                 if (cursor < buffer_size) {
-                    buffers[cursor] = next_char;
+                    buffer[cursor] = next_char;
                     cursor++;
                 }
                 else {
@@ -155,14 +155,16 @@ def codegen_tree(tree: ast.Tree) -> str:
 
     # Calling the module.
     source_code += (
-        f"\t\t{tree.module.name}(" + ", ".join(module_signals) + ");\n"
+        f"\t\t{tree.module.name}("
+        + ", ".join([f"&{signal}" for signal in module_signals])
+        + ");\n"
         "\n"  # For the style
     )
 
     # Reporting the values of all the signals.
     source_code += '\t\tputs("Signal Report\\n=============");\n'
     for signal in module_signals:
-        source_code += f'\t\tprintf("Signal {signal}: %d\\n", signal);\n'
+        source_code += f'\t\tprintf("Signal {signal}: %d\\n", {signal});\n'
 
     # Ending the interaction loop and the main function.
     source_code += (
