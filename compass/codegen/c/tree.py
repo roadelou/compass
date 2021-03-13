@@ -45,6 +45,9 @@ def codegen_tree(tree: ast.Tree) -> str:
     source_code += "\n"
     source_code += f"const int clock_constant = 1;\n"
     source_code += f"const int *clk = &clock_constant;\n"
+    # Creating the never signal, which always evaluates to False.
+    source_code += f"const int never_constant = 0;\n"
+    source_code += f"const int *never = &never_constant;\n"
     # Newline for the style.
     source_code += "\n"
     # Adding the code for the inner module.
