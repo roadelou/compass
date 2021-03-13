@@ -139,12 +139,6 @@ def codegen_tree(tree: ast.Tree) -> str:
             f"\t\t\t{signal} = 1;\n"
             "\t\t}\n"
         )
-    # Adding the "quit" keyword to end the execution.
-    source_code += (
-        '\t\telse if (strncmp(word, "quit", 5) == 0) {\n'
-        "\t\t\tbreak;\n"
-        "\t\t}\n"
-    )
     # Adding the else case.
     source_code += (
         "\t\telse {\n"
