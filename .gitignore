@@ -1,0 +1,10 @@
+# Python cache
+__pycache__
+# Vim swap files
+*.swp
+# Virtualenv
+env
+# Tox virtualenv
+.tox
+# Pip cache
+*.egg-info
