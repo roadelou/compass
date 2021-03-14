@@ -104,10 +104,12 @@ def codegen_each(
     inner_body, inner_immediate, inner_states = codegen_statement(
         statement.statement, indent
     )
+    # We build the code for the reset expression.
+    inner_expression = codegen_expression(statement.expression)
     # for-each statements don't use the inner_immediate states in any particular way.
     owned_states = inner_states
     # The each loops don't have any state, but we have to build a bit of code foe the reset.
-    source_code += indent_str + f"if (*{statement.signal}) {{\n"
+    source_code += indent_str + f"if ({inner_expression}) {{\n"
     # We have to reset all the states owned by the body of the loop.
     for state in owned_states:
         source_code += indent_str + "\t" + f"{state} = 0;\n"
@@ -206,10 +208,12 @@ def codegen_await(
     """
     # We quickly compute the indentation string we will need for this statement.
     indent_str = "\t" * indent
+    # We build the code for the inner expression.
+    inner_expression = codegen_expression(statement.expression)
     # We need a new state for the await statement.
-    await_state = SSAGenerator.new_name(f"await_{statement.signal}")
+    await_state = SSAGenerator.new_name("await")
     # We build the expected source code.
-    source_code = indent_str + f"{await_state} |= *{statement.signal};\n"
+    source_code = indent_str + f"{await_state} |= {inner_expression};\n"
     # We return the expected triple.
     return source_code, await_state, [await_state]
 
