@@ -35,7 +35,7 @@ def codegen_expression(expression: ast.Expression) -> str:
     if isinstance(expression, ast.Number):
         return str(expression)
     elif isinstance(expression, ast.SignalExpression):
-        return str(expression)
+        return str(expression.signal)
     else:
         raise ValueError(f"Unkown Expression {expression}")
 

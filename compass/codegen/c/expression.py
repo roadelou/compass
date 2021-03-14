@@ -35,7 +35,7 @@ def codegen_expression(expression: ast.Expression) -> str:
         return str(expression)
     elif isinstance(expression, ast.SignalExpression):
     # Getting the value behind the signal pointer.
-        return f"*{expression}"
+        return f"*{expression.signal}"
     else:
         raise ValueError(f"Unkown Expression {expression}")
 
