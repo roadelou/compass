@@ -39,17 +39,17 @@ def codegen_module(module: ast.Module) -> str:
     """
     source_code = ""
     # Adding the name of the module.
-    source_code += f"module {module.name} ("
+    source_code += f"module {module.name}("
     # Building the code for each declaration.
     code_declarations = [
         codegen_declaration(declaration) for declaration in module.declarations
     ]
     # Joining the codes for the declarations.
-    source_code += ",".join(code_declarations)
+    source_code += ", ".join(code_declarations)
     # Opening the brackets for the body of the code.
     source_code += ") {\n"
     # Adding the (indented) code for the body of the module.
-    source_code += codegen_statement(module.statement, indent=1)
+    source_code += codegen_statement(module.statement, indent=1) + "\n"
     # Closing the brackets.
     source_code += "}\n"
     # Returing the prepared source code.

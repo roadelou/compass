@@ -44,7 +44,7 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         return (
             indent_str
             + f"each {statement.signal} {{\n"
-            + inner_body
+            + inner_body + "\n"
             + indent_str
             + "}"
         )
@@ -55,7 +55,7 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
             for inner_statement in statement.statements
         ]
         # We join the different lines.
-        inner_body = ";\n".join(inner_statement_bodies)
+        inner_body = ";\n".join(inner_statement_bodies) + ";\n"
         # We return the code for the Seq statement.
         return indent_str + "seq {\n" + inner_body + indent_str + "}"
     elif isinstance(statement, ast.Par):
@@ -65,7 +65,7 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
             for inner_statement in statement.statements
         ]
         # We join the different lines.
-        inner_body = ";\n".join(inner_statement_bodies)
+        inner_body = ";\n".join(inner_statement_bodies) + ";\n"
         # We return the code for the Par statement.
         return indent_str + "par {\n" + inner_body + indent_str + "}"
     elif isinstance(statement, ast.AwaitStatement):

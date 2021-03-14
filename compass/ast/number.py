@@ -18,7 +18,7 @@
 
 
 # Internal imports
-from compass.ast.Expression import Expression  # Used for inheritance
+from compass.ast.expression import Expression  # Used for inheritance
 
 ################################### CLASSES ####################################
 
