@@ -169,6 +169,10 @@ class CompassParser(Parser):
     def expression(self, p):
         return DivOp(p.expression0, p.expression1)
 
+    @_("expression \"%\" expression")
+    def expression(self, p):
+        return ModOp(p.expression0, p.expression1)
+
     # Rules for unary operators.
     @_("\"-\" expression %prec UMINUS")
     def expression(self, p):
