@@ -41,6 +41,9 @@ def codegen_tree(tree: ast.Tree) -> str:
     # The states have value 0 by default.
     for state in states:
         source_code += f"static int {state} = 0;\n"
+    # If there are no states, we add a small comment instead.
+    if len(states) == 0:
+        source_code += "/* No states for this code. */\n"
     # Creating the clock signal, which always evaluates to True.
     source_code += "\n"
     source_code += f"const int clock_constant = 1;\n"
