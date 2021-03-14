@@ -37,6 +37,10 @@ class CompassLexer(Lexer):
 
     # Matching the assignation operator.
     ASSIGN = r"<-"
+    # Matching non-literal the binary operators.
+    TESTEQ = r"=="
+    AND = r"&&"
+    OR = r"\|\|"
 
     # Matching a number, only integers are allowed in compass.
     NUMBER = r"\d+"

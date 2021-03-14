@@ -39,10 +39,13 @@ tokens = {
     "ASSIGN",  # assignation symbol (<-).
     "EMIT",  # emit keyword.
     "NUMBER",  # literal integer.
+    "AND",  # && operator.
+    "OR",   # || operator.
+    "TESTEQ",   # == operator.
 }
 
 # Defining the litteral tokens used in the compass language.
-literals = {"(", ")", "{", "}", ";", ","}
+literals = {"(", ")", "{", "}", ";", ",", "+", "-", "/", "*", "!"}
 
 ##################################### MAIN #####################################
 
