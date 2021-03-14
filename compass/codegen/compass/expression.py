@@ -54,6 +54,8 @@ def codegen_binary(expression: ast.Binary) -> str:
         return f"({left_code} + {right_code})"
     elif isinstance(expression, AndOp):
         return f"({left_code} && {right_code})"
+    elif isinstance(expression, ModOp):
+        return f"({left_code} % {right_code})"
     elif isinstance(expression, DivOp):
         return f"({left_code} / {right_code})"
     elif isinstance(expression, MinusOp):
