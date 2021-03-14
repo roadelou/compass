@@ -43,6 +43,8 @@ def main():
         packages=[
             "compass",
             "compass/ast",
+            "compass/ast/unary",
+            "compass/ast/binary",
             "compass/codegen",
             "compass/codegen/compass",
             "compass/codegen/c",

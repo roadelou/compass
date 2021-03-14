@@ -4,7 +4,7 @@
 
 # Contributors: roadelou
 # Contacts:
-# Creation Date: 2021-03-12
+# Creation Date: 2021 - 03 - 14
 # Language: Python3
 
 ################################### IMPORTS ####################################
@@ -12,34 +12,35 @@
 # Standard library
 # Your imports from the standard library go here
 
-
 # External imports
 # Your imports from other packages go here
 
-
 # Internal imports
-from compass.ast.await_statement import AwaitStatement
-from compass.ast.each import Each
-from compass.ast.emit_statement import EmitStatement
-from compass.ast.expression import Expression
-from compass.ast.input_declaration import InputDeclaration
-from compass.ast.module import Module
-from compass.ast.node import Node
-from compass.ast.number import Number
-from compass.ast.output_declaration import OutputDeclaration
-from compass.ast.par import Par
-from compass.ast.seq import Seq
-from compass.ast.signal import Signal
-from compass.ast.signal_expression import SignalExpression
-from compass.ast.declaration import Declaration
-from compass.ast.statement import Statement
-from compass.ast.tree import Tree
-from compass.ast.unary import *
-from compass.ast.binary import *
+from compass.ast.expression import (
+    Expression,
+)  # Used for inheritance and type hints.
 
 ################################### CLASSES ####################################
 
-# Your classes go here
+
+class Binary(Expression):
+    """
+    Base class used to represent binary operators in the AST.
+    """
+
+    def __init__(self, left: Expression, right: Expression):
+        """
+        Constructor of the base Binary class.
+
+        Arguments
+        =========
+         - left: The first operand of the binary Expression.
+         - right: The second operand of the binary Expression.
+        """
+        # Storing the arguments.
+        self.left = left
+        self.right = right
+
 
 ################################## FUNCTIONS ###################################
 
