@@ -31,7 +31,7 @@ class CompassParser(Parser):
     """
 
     # DEBUG
-    debugfile = "test/files/parser.out"
+    # debugfile = "test/files/parser.out"
 
     # The tokens for the Compass language.
     tokens = compass_tokens.tokens
@@ -167,7 +167,7 @@ class CompassParser(Parser):
 
     @_("expression \"*\" expression")
     def expression(self, p):
-        return ast.PlusOp(p.expression0, p.expression1)
+        return ast.TimesOp(p.expression0, p.expression1)
 
     @_("expression \"/\" expression")
     def expression(self, p):
