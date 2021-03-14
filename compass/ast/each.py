@@ -19,7 +19,7 @@
 
 # Internal imports
 from compass.ast.statement import Statement  # Used for inheritance
-from compass.ast.signal import Signal  # Used for type hints
+from compass.ast.expression import Expression  # Used for type hints
 
 ################################### CLASSES ####################################
 
@@ -29,17 +29,17 @@ class Each(Statement):
     Class used to represent an Each loop in the AST.
     """
 
-    def __init__(self, signal: Signal, statement: Statement):
+    def __init__(self, expression: Expression, statement: Statement):
         """
         Constructor of the Each class.
 
         Arguments
         =========
-         - signal: The Signal to use as a rest for this loop.
+         - expression: The Expression to use as a reset for this loop.
          - statement: The Statement which constitutes the body of this loop.
         """
         # Storing the arguments.
-        self.signal = signal
+        self.expression = expression
         self.statement = statement
 
 

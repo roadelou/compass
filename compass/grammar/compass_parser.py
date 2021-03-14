@@ -72,10 +72,10 @@ class CompassParser(Parser):
         return [ast.OutputDeclaration(p.signal)]
 
     # Creating a loop each statement from a reset Signal + Statement body.
-    @_('EACH signal "{" statement "}"')
+    @_('EACH expression "{" statement "}"')
     def statement(self, p):
         # Creating an Each statement.
-        return ast.Each(p.signal, p.statement)
+        return ast.Each(p.expression, p.statement)
 
     # Creating a list of statements from a single isolated statement.
     @_("statement")
@@ -93,7 +93,6 @@ class CompassParser(Parser):
     def list_statement(self, p):
         return p.list_statement
 
-
     # Creating a sequential statement from a scoped list of statements.
     @_('SEQ "{" list_statement "}"')
     def statement(self, p):
@@ -105,9 +104,9 @@ class CompassParser(Parser):
         return ast.Par(p.list_statement)
 
     # Creating an await from a signal.
-    @_('AWAIT signal')
+    @_('AWAIT expression')
     def statement(self, p):
-        return ast.AwaitStatement(p.signal)
+        return ast.AwaitStatement(p.expression)
 
     # Creating an emit from an assignement.
     @_('EMIT signal ASSIGN expression')
@@ -129,6 +128,11 @@ class CompassParser(Parser):
     @_("NUMBER")
     def expression(self, p):
         return ast.Number(p.NUMBER)
+
+    # Creating an expression from an isolated signal (for complex expressions).
+    @_("signal")
+    def expression(self, p):
+        return ast.SignalExpression(p.signal)
 
 
 ################################## FUNCTIONS ###################################

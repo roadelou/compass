@@ -19,26 +19,26 @@
 
 # Internal imports
 from compass.ast.statement import Statement  # Used for inheritance
-from compass.ast.signal import Signal  # Used for type hints
+from compass.ast.expression import Expression  # Used for type hints
 
 ################################### CLASSES ####################################
 
 
 class AwaitStatement(Statement):
     """
-    Class used to represent an awiat statement in the AST.
+    Class used to represent an await statement in the AST.
     """
 
-    def __init__(self, signal: Signal):
+    def __init__(self, expression: Expression):
         """
         Constructor of the Await class.
 
         Arguments
         =========
-         - signal: The Signal to wait for.
+         - expression: The Expression to wait for.
         """
         # Storing the arguments.
-        self.signal = signal
+        self.expression = expression
 
 
 ################################## FUNCTIONS ###################################
