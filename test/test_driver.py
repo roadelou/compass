@@ -75,7 +75,7 @@ def test_c_compiler():
         # Runs the compilation to compass target.
         compass_compiled = compass_compile(compass_source, "C")
         # Creating the path for the compiled file.
-        compiled_path = example.replace("examples/", "test/files").replace(
+        compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.c"
         )
         # Writes the output to a file.
@@ -96,7 +96,7 @@ def test_header_compiler():
         # Runs the compilation to compass target.
         compass_compiled = compass_compile(compass_source, "header")
         # Creating the path for the compiled file.
-        compiled_path = example.replace("examples/", "test/files").replace(
+        compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.h"
         )
         # Writes the output to a file.
@@ -117,7 +117,7 @@ def test_debug_compiler():
         # Runs the compilation to compass target.
         compass_compiled = compass_compile(compass_source, "debug")
         # Creating the path for the compiled file.
-        compiled_path = example.replace("examples/", "test/files").replace(
+        compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.debug.c"
         )
         # Writes the output to a file.
