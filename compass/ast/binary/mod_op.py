@@ -18,20 +18,15 @@
 
 
 # Internal imports 
-from compass.ast.binary.binary import Binary
-from compass.ast.binary.add_op import AddOp
-from compass.ast.binary.and_op import AndOp
-from compass.ast.binary.div_op import DivOp
-from compass.ast.binary.minus_op import MinusOp
-from compass.ast.binary.mod_op import ModOp
-from compass.ast.binary.or_op import OrOp
-from compass.ast.binary.plus_op import PlusOp
-from compass.ast.binary.testeq_op import TestEqOp
-from compass.ast.binary.times_op import TimesOp
+from compass.ast.binary.binary import Binary    # Used for inheritance
 
 ################################### CLASSES ####################################
 
-# Your classes go here 
+class ModOp(Binary):
+    """
+    Modulo (remainder) operator used in complex expressions.
+    """
+    pass
 
 ################################## FUNCTIONS ###################################
 
