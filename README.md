@@ -54,6 +54,20 @@ compass --lang debug abro.cmps
 
 Some examples of the language can be found in the [examples](https://github.com/roadelou/compass/examples) folder.
 
+# Features
+
+This section details what language features are currently available in __compass__ :compass: and which ones are planned.
+
+## Current features
+
+The version of compass in the repository supports:
+
+ - Input and output signals
+ - `each`, `par`, `seq`, `await` and `emit` statements
+ - Many C-inspired operators for expressions
+
+:warning: Be careful about the syntax for end-of lines. The `;` operator should only be used to separate several statements in a list of statements, i.e. only in `seq` and `par` blocks. The last `;` is optional by the way.
+
 ### METADATA
 
 Field | Value
