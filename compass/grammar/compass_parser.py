@@ -29,6 +29,10 @@ class CompassParser(Parser):
     Parser for the Compass language, used to build the AST from the tokenized
     source code.
     """
+
+    # DEBUG
+    debugfile = "test/files/parser.out"
+
     # The tokens for the Compass language.
     tokens = compass_tokens.tokens
 
@@ -41,7 +45,7 @@ class CompassParser(Parser):
         # The next operators are used for expressions.
         ("nonassoc", TESTEQ),
         ("left", OR, "+", "-"),
-        ("left", AND, "*", "/"),
+        ("left", AND, "*", "/", "%"),
         ("right", UMINUS),
         ("right", "!"),
     )
@@ -143,44 +147,44 @@ class CompassParser(Parser):
     # Creating the rules for complex expressions which use operators.
     @_("expression TESTEQ expression")
     def expression(self, p):
-        return TestEqOp(p.expression0, p.expression1)
+        return ast.TestEqOp(p.expression0, p.expression1)
 
     @_("expression OR expression")
     def expression(self, p):
-        return OrOp(p.expression0, p.expression1)
+        return ast.OrOp(p.expression0, p.expression1)
 
     @_("expression \"+\" expression")
     def expression(self, p):
-        return PlusOp(p.expression0, p.expression1)
+        return ast.PlusOp(p.expression0, p.expression1)
 
     @_("expression \"-\" expression")
     def expression(self, p):
-        return MinusOp(p.expression0, p.expression1)
+        return ast.MinusOp(p.expression0, p.expression1)
 
     @_("expression AND expression")
     def expression(self, p):
-        return AndOp(p.expression0, p.expression1)
+        return ast.AndOp(p.expression0, p.expression1)
 
     @_("expression \"*\" expression")
     def expression(self, p):
-        return PlusOp(p.expression0, p.expression1)
+        return ast.PlusOp(p.expression0, p.expression1)
 
     @_("expression \"/\" expression")
     def expression(self, p):
-        return DivOp(p.expression0, p.expression1)
+        return ast.DivOp(p.expression0, p.expression1)
 
     @_("expression \"%\" expression")
     def expression(self, p):
-        return ModOp(p.expression0, p.expression1)
+        return ast.ModOp(p.expression0, p.expression1)
 
     # Rules for unary operators.
     @_("\"-\" expression %prec UMINUS")
     def expression(self, p):
-        return UminusOp(p.expression)
+        return ast.UminusOp(p.expression)
 
     @_("\"!\" expression")
     def expression(self, p):
-        return NotOp(p.expression)
+        return ast.NotOp(p.expression)
 
     # Enabling the use of parenthesis to prioritize some operations.
     @_("\"(\" expression \")\"")
