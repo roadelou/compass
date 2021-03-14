@@ -40,11 +40,12 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
     if isinstance(statement, ast.Each):
         # We build the code for the inner body of the for-each loop.
         inner_body = codegen_statement(statement.statement, indent + 1)
+        # We build the code for the reset expression.
+        inner_expression = codegen_expression(statement.expression)
         # We return the code for the whole for-each loop.
         return (
             indent_str
-            + f"each {statement.signal} {{\n"
-            + inner_body + "\n"
+            + f"each {inner_expression} {{\n{inner_body}\n"
             + indent_str
             + "}"
         )
@@ -57,7 +58,7 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         # We join the different lines.
         inner_body = ";\n".join(inner_statement_bodies) + ";\n"
         # We return the code for the Seq statement.
-        return indent_str + "seq {\n" + inner_body + indent_str + "}"
+        return indent_str + f"seq {\n{inner_body}" + indent_str + "}"
     elif isinstance(statement, ast.Par):
         # We build the code for each inner statement.
         inner_statement_bodies = [
@@ -67,10 +68,12 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         # We join the different lines.
         inner_body = ";\n".join(inner_statement_bodies) + ";\n"
         # We return the code for the Par statement.
-        return indent_str + "par {\n" + inner_body + indent_str + "}"
+        return indent_str + f"par {\n{inner_body}" + indent_str + "}"
     elif isinstance(statement, ast.AwaitStatement):
+        # Getting the expression that we have to await.
+        inner_expression = statement.expression
         # We return the code for the await statement.
-        return indent_str + f"await {statement.signal}"
+        return indent_str + f"await {inner_expression}"
     elif isinstance(statement, ast.EmitStatement):
         # We build the code for the inner expression.
         inner_expression = codegen_expression(statement.expression)

@@ -34,6 +34,8 @@ def codegen_expression(expression: ast.Expression) -> str:
     # There is only one subtype for Expression.
     if isinstance(expression, ast.Number):
         return str(expression)
+    elif isinstance(expression, ast.SignalExpression):
+        return str(expression)
     else:
         raise ValueError(f"Unkown Expression {expression}")
 
