@@ -32,8 +32,8 @@ def codegen_expression(expression: ast.Expression) -> str:
     Outputs the C code corresponding to the provided Expression.
     """
     # There is only one subtype for Expression.
-    if isinstance(expression, ast.Assign):
-        return f"*{expression.signal} = {expression.number}"
+    if isinstance(expression, ast.Number):
+        return str(expression.number)
     else:
         raise ValueError(f"Unkown Expression {expression}")
 

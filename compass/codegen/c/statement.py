@@ -222,8 +222,10 @@ def codegen_emit(
     """
     # We quickly compute the indentation string we will need for this statement.
     indent_str = "\t" * indent
+    # We get the C code for the inner expression (the rvalue).
+    inner_expression = codegen_expression(statement.expression)
     # We build the expected source code.
-    source_code = indent_str + codegen_expression(statement.expression) + ";\n"
+    source_code = indent_str + f"*{statement.signal} = {inner_expression};\n"
     # We return the expected triple. An emit statement always exits instantly.
     return source_code, "1", list()
 
