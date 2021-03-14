@@ -46,7 +46,7 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
             + f"each {statement.signal} {{\n"
             + inner_body
             + indent_str
-            + "};\n"
+            + "}"
         )
     elif isinstance(statement, ast.Seq):
         # We build the code for each inner statement.
@@ -55,9 +55,9 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
             for inner_statement in statement.statements
         ]
         # We join the different lines.
-        inner_body = "".join(inner_statement_bodies)
+        inner_body = ";\n".join(inner_statement_bodies)
         # We return the code for the Seq statement.
-        return indent_str + "seq {\n" + inner_body + indent_str + "};\n"
+        return indent_str + "seq {\n" + inner_body + indent_str + "}"
     elif isinstance(statement, ast.Par):
         # We build the code for each inner statement.
         inner_statement_bodies = [
@@ -65,17 +65,17 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
             for inner_statement in statement.statements
         ]
         # We join the different lines.
-        inner_body = "".join(inner_statement_bodies)
+        inner_body = ";\n".join(inner_statement_bodies)
         # We return the code for the Par statement.
-        return indent_str + "par {\n" + inner_body + indent_str + "};\n"
+        return indent_str + "par {\n" + inner_body + indent_str + "}"
     elif isinstance(statement, ast.AwaitStatement):
         # We return the code for the await statement.
-        return indent_str + f"await {statement.signal};\n"
+        return indent_str + f"await {statement.signal}"
     elif isinstance(statement, ast.EmitStatement):
         # We build the code for the inner expression.
         inner_expression = codegen_expression(statement.expression)
-        # We return the code for the await statement.
-        return indent_str + f"emit {inner_expression};\n"
+        # We return the code for the emit statement.
+        return indent_str + f"emit {statement.signal} <- {inner_expression}"
     else:
         raise ValueError(f"Unknown statement {statement}")
 
