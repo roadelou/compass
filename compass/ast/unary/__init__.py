@@ -18,6 +18,7 @@
 
 
 # Internal imports 
+from compass.ast.unary.unary import Unary
 from compass.ast.unary.not_op import NotOp
 from compass.ast.unary.uminus_op import UminusOp
 
