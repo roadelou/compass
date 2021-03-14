@@ -31,6 +31,7 @@ from compass.ast.output_declaration import OutputDeclaration
 from compass.ast.par import Par
 from compass.ast.seq import Seq
 from compass.ast.signal import Signal
+from compass.ast.signal_expression import SignalExpression
 from compass.ast.declaration import Declaration
 from compass.ast.statement import Statement
 from compass.ast.tree import Tree
