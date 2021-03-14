@@ -19,7 +19,6 @@
 
 # Internal imports 
 from compass.ast.binary.binary import Binary
-from compass.ast.binary.add_op import AddOp
 from compass.ast.binary.and_op import AndOp
 from compass.ast.binary.div_op import DivOp
 from compass.ast.binary.minus_op import MinusOp
