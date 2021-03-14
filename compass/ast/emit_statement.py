@@ -19,6 +19,7 @@
 
 # Internal imports
 from compass.ast.statement import Statement  # Used for inheritance
+from compass.ast.signal import Signal  # Used for type hints
 from compass.ast.expression import Expression  # Used for type hints
 
 ################################### CLASSES ####################################
@@ -29,15 +30,17 @@ class EmitStatement(Statement):
     Class used to represent an Emit statement in the AST.
     """
 
-    def __init__(self, expression: Expression):
+    def __init__(self, signal: Signal, expression: Expression):
         """
         Constructor of the Emit class.
 
         Arguments
         =========
-         - expression: The expression describing what should be emitted.
+         - signal: The Signal to assign to.
+         - expression: The Expression to assign to the Signal.
         """
         # Storing the arguments.
+        self.signal = signal
         self.expression = expression
 
 

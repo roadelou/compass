@@ -18,12 +18,12 @@
 
 
 # Internal imports
-from compass.ast.node import Node  # Used for inheritance
+from compass.ast.Expression import Expression  # Used for inheritance
 
 ################################### CLASSES ####################################
 
 
-class Number(Node):
+class Number(Expression):
     """
     Class used to represent a Number in the AST. A number is a literal integer
     in the source code.
@@ -40,7 +40,8 @@ class Number(Node):
         # Storing our argument in the right type.
         self.number = int(number)
 
-    # To simplify the codegen slightly, we gove a string representation to Numbers.
+    # To simplify the codegen slightly, we give a string representation to
+    # Numbers.
     def __repr__(self) -> str:
         """
         String representation of the Number.

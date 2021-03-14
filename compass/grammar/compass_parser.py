@@ -46,7 +46,8 @@ class CompassParser(Parser):
         # Returning an AST from the Module.
         return ast.Tree(p.module)
 
-    # Building a Module from Name + Declarations + Body. The most complex rule in the AST.
+    # Building a Module from Name + Declarations + Body. The most complex rule
+    # in the AST.
     @_('MODULE NAME "(" list_declaration ")" "{" statement "}"')
     def module(self, p):
         # Returning the Module from the provided description.
@@ -108,26 +109,26 @@ class CompassParser(Parser):
     def statement(self, p):
         return ast.AwaitStatement(p.signal)
 
-    # Creating an emit from an expression.
-    @_('EMIT expression')
+    # Creating an emit from an assignement.
+    @_('EMIT signal ASSIGN expression')
     def statement(self, p):
-        return ast.EmitStatement(p.expression)
+        return ast.EmitStatement(p.signal, p.expression)
 
-    # Creating an expression from a single signal.
-    @_("signal")
-    def expression(self, p):
+    # Creating an emit from a single signal.
+    @_("EMIT signal")
+    def statement(self, p):
         # We simply assign 1 to the signal.
-        return ast.Assign(p.signal, ast.Number("1"))
-
-    # Creating an expression from an assignation.
-    @_("signal ASSIGN NUMBER")
-    def expression(self, p):
-        return ast.Assign(p.signal, p.NUMBER)
+        return ast.EmitStatement(p.signal, ast.Number("1"))
 
     # Creating a Signal from an isolated name.
     @_("NAME")
     def signal(self, p):
         return ast.Signal(p.NAME)
+
+    # Creating an expression from an isolated number.
+    @_("NUMBER")
+    def expression(self, p):
+        return ast.Number(p.NUMBER)
 
 
 ################################## FUNCTIONS ###################################
