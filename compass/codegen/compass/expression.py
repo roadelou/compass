@@ -50,23 +50,21 @@ def codegen_binary(expression: ast.Binary) -> str:
     left_code = codegen_expression(expression.left)
     right_code = codegen_expression(expression.right)
     # We downcast to the right operator.
-    if isinstance(expression, AddOp):
-        return f"({left_code} + {right_code})"
-    elif isinstance(expression, AndOp):
+    if isinstance(expression, ast.AndOp):
         return f"({left_code} && {right_code})"
-    elif isinstance(expression, ModOp):
+    elif isinstance(expression, ast.ModOp):
         return f"({left_code} % {right_code})"
-    elif isinstance(expression, DivOp):
+    elif isinstance(expression, ast.DivOp):
         return f"({left_code} / {right_code})"
-    elif isinstance(expression, MinusOp):
+    elif isinstance(expression, ast.MinusOp):
         return f"({left_code} - {right_code})"
-    elif isinstance(expression, OrOp):
+    elif isinstance(expression, ast.OrOp):
         return f"({left_code} || {right_code})"
-    elif isinstance(expression, PlusOp):
+    elif isinstance(expression, ast.PlusOp):
         return f"({left_code} + {right_code})"
-    elif isinstance(expression, TestEqOp):
+    elif isinstance(expression, ast.TestEqOp):
         return f"({left_code} == {right_code})"
-    elif isinstance(expression, TimesOp):
+    elif isinstance(expression, ast.TimesOp):
         return f"({left_code} * {right_code})"
     else:
         raise ValueError(f"Unknown binary operator {expression}")
@@ -78,9 +76,9 @@ def codegen_unary(expression: ast.Unary) -> str:
     # Recursively building the code for the inner expression.
     inner_code = codegen_expression(expression.expression)
     # We downcast to the right operator.
-    if isinstance(expression, NotOp):
+    if isinstance(expression, ast.NotOp):
         return f"(!{inner_code})"
-    elif isinstance(expression, UminusOp):
+    elif isinstance(expression, ast.UminusOp):
         return f"(-{inner_code})"
     else:
         raise ValueError(f"Unknown unary operator {expression}")
