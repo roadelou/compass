@@ -79,6 +79,9 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         inner_expression = codegen_expression(statement.expression)
         # We return the code for the emit statement.
         return indent_str + f"emit {statement.signal} <- {inner_expression}"
+    elif isinstance(statement, ast.LocalStatement):
+        # We return the code for the local variable declaration.
+        return indent_str + f"local {statement.name}"
     else:
         raise ValueError(f"Unknown statement {statement}")
 
