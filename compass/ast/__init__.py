@@ -23,6 +23,7 @@ from compass.ast.each import Each
 from compass.ast.emit_statement import EmitStatement
 from compass.ast.expression import Expression
 from compass.ast.input_declaration import InputDeclaration
+from compass.ast.local_statement import LocalStatement
 from compass.ast.module import Module
 from compass.ast.node import Node
 from compass.ast.number import Number
