@@ -40,8 +40,9 @@ tokens = {
     "EMIT",  # emit keyword.
     "NUMBER",  # literal integer.
     "AND",  # && operator.
-    "OR",   # || operator.
-    "TESTEQ",   # == operator.
+    "OR",  # || operator.
+    "TESTEQ",  # == operator.
+    "LOCAL",  # local keyword.
 }
 
 # Defining the litteral tokens used in the compass language.

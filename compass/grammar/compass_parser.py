@@ -38,7 +38,7 @@ class CompassParser(Parser):
 
     # The only precedence rule is that <- should go before emit.
     precedence = (
-        ("nonassoc", MODULE, INPUT, OUTPUT, EACH, EMIT, AWAIT, SEQ, PAR),
+        ("nonassoc", MODULE, INPUT, OUTPUT, EACH, EMIT, AWAIT, SEQ, PAR, LOCAL),
         ("left", ","),  # , is left associative, to solve conflicts
         ("left", ";"),  # , is left associative, to solve conflicts
         ("nonassoc", ASSIGN),
@@ -93,13 +93,13 @@ class CompassParser(Parser):
         return [p.statement]
 
     # Merging two adjacent lists of statement.
-    @_("list_statement \";\" list_statement")
+    @_('list_statement ";" list_statement')
     def list_statement(self, p):
         return p.list_statement0 + p.list_statement1
 
     # Rule to resolve the optionnal last semi-colon for the last statement of a
     # list.
-    @_("list_statement \";\"")
+    @_('list_statement ";"')
     def list_statement(self, p):
         return p.list_statement
 
@@ -113,13 +113,18 @@ class CompassParser(Parser):
     def statement(self, p):
         return ast.Par(p.list_statement)
 
+    # Creating a local variable.
+    @_("LOCAL NAME")
+    def statement(self, p):
+        return ast.LocalStatement(p.NAME)
+
     # Creating an await from a signal.
-    @_('AWAIT expression')
+    @_("AWAIT expression")
     def statement(self, p):
         return ast.AwaitStatement(p.expression)
 
     # Creating an emit from an assignement.
-    @_('EMIT signal ASSIGN expression')
+    @_("EMIT signal ASSIGN expression")
     def statement(self, p):
         return ast.EmitStatement(p.signal, p.expression)
 
@@ -153,11 +158,11 @@ class CompassParser(Parser):
     def expression(self, p):
         return ast.OrOp(p.expression0, p.expression1)
 
-    @_("expression \"+\" expression")
+    @_('expression "+" expression')
     def expression(self, p):
         return ast.PlusOp(p.expression0, p.expression1)
 
-    @_("expression \"-\" expression")
+    @_('expression "-" expression')
     def expression(self, p):
         return ast.MinusOp(p.expression0, p.expression1)
 
@@ -165,31 +170,32 @@ class CompassParser(Parser):
     def expression(self, p):
         return ast.AndOp(p.expression0, p.expression1)
 
-    @_("expression \"*\" expression")
+    @_('expression "*" expression')
     def expression(self, p):
         return ast.TimesOp(p.expression0, p.expression1)
 
-    @_("expression \"/\" expression")
+    @_('expression "/" expression')
     def expression(self, p):
         return ast.DivOp(p.expression0, p.expression1)
 
-    @_("expression \"%\" expression")
+    @_('expression "%" expression')
     def expression(self, p):
         return ast.ModOp(p.expression0, p.expression1)
 
     # Rules for unary operators.
-    @_("\"-\" expression %prec UMINUS")
+    @_('"-" expression %prec UMINUS')
     def expression(self, p):
         return ast.UminusOp(p.expression)
 
-    @_("\"!\" expression")
+    @_('"!" expression')
     def expression(self, p):
         return ast.NotOp(p.expression)
 
     # Enabling the use of parenthesis to prioritize some operations.
-    @_("\"(\" expression \")\"")
+    @_('"(" expression ")"')
     def expression(self, p):
         return p.expression
+
 
 ################################## FUNCTIONS ###################################
 
