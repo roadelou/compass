@@ -34,7 +34,7 @@ def codegen_expression(expression: ast.Expression) -> str:
     if isinstance(expression, ast.Number):
         return str(expression)
     elif isinstance(expression, ast.SignalExpression):
-    # Getting the value behind the signal pointer.
+        # Getting the value behind the signal pointer.
         return f"*{expression.signal}"
     elif isinstance(expression, ast.Binary):
         return codegen_binary(expression)
@@ -42,6 +42,7 @@ def codegen_expression(expression: ast.Expression) -> str:
         return codegen_unary(expression)
     else:
         raise ValueError(f"Unkown Expression {expression}")
+
 
 def codegen_binary(expression: ast.Binary) -> str:
     """
@@ -70,6 +71,7 @@ def codegen_binary(expression: ast.Binary) -> str:
     else:
         raise ValueError(f"Unknown binary operator {expression}")
 
+
 def codegen_unary(expression: ast.Unary) -> str:
     """
     Specialized variant of codegen_expression for unary operators.
@@ -83,6 +85,7 @@ def codegen_unary(expression: ast.Unary) -> str:
         return f"(-{inner_code})"
     else:
         raise ValueError(f"Unknown unary operator {expression}")
+
 
 ##################################### MAIN #####################################
 

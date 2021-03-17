@@ -22,6 +22,10 @@ import compass.ast as ast  # Used for downcasts
 from compass.codegen.c.expression import (
     codegen_expression,
 )  # Used for recursive codegen
+from compass.codegen.utils import (
+    InnerContext,
+    OuterContext,
+)  # Used for type hints
 
 ################################### CLASSES ####################################
 
@@ -51,22 +55,19 @@ class SSAGenerator:
 
 
 def codegen_statement(
-    statement: ast.Statement, indent: int
-) -> Tuple[str, str, List[str]]:
+    statement: ast.Statement, oc: OuterContext
+) -> InnerContext:
     """
     Outputs the Compass code corresponding to the provided Statement.
 
     Arguments
     =========
      - statement: The statement to build the code for.
-     - indent: The current indentation level.
+     - oc: The OuterContext we have to take into account when building this statement.
 
     Returns
     =======
-    A tuple with three values:
-     - The requested code.
-     - The immediate state of this statement, used by seq and par.
-     - The list of states owned by this statement (and its children).
+    The InnerContext produced by this code (which includes the generated code).
 
     Note
     ====
@@ -74,108 +75,105 @@ def codegen_statement(
     states are boolena values telling whether a statement is done or not and can
     be rvalues. Owned states are used for initialization and resets.
     """
-    # We quickly compute the indentation string we will need for this statement.
-    indent_str = "\t" * indent
     # Several cases appear, one for each kind of statements.
     if isinstance(statement, ast.Each):
-        return codegen_each(statement, indent)
+        return codegen_each(statement, oc)
     elif isinstance(statement, ast.Seq):
-        return codegen_seq(statement, indent)
+        return codegen_seq(statement, oc)
     elif isinstance(statement, ast.Par):
-        return codegen_par(statement, indent)
+        return codegen_par(statement, oc)
     elif isinstance(statement, ast.AwaitStatement):
-        return codegen_await(statement, indent)
+        return codegen_await(statement, oc)
     elif isinstance(statement, ast.EmitStatement):
-        return codegen_emit(statement, indent)
+        return codegen_emit(statement, oc)
+    elif isinstance(statement, ast.LocalStatement):
+        return codegen_local(statement, oc)
     else:
         raise ValueError(f"Unknown statement {statement}")
 
 
-def codegen_each(
-    statement: ast.Each, indent: int
-) -> Tuple[str, str, List[str]]:
+def codegen_each(statement: ast.Each, oc: OuterContext) -> InnerContext:
     """
     Specialized variant of codegen_statement for for-each statements.
     """
-    source_code = ""
-    # We quickly compute the indentation string we will need for this statement.
-    indent_str = "\t" * indent
+    # The Inner Context we will return. Note that an each loop never ends.
+    ic = InnerContext(immediate_state="0")
     # We build the code for the inner body of the for-each loop.
-    inner_body, inner_immediate, inner_states = codegen_statement(
-        statement.statement, indent
-    )
+    inner_ic = codegen_statement(statement.statement, oc)
     # We build the code for the reset expression.
     inner_expression = codegen_expression(statement.expression)
-    # for-each statements don't use the inner_immediate states in any particular way.
-    owned_states = inner_states
-    # The each loops don't have any state, but we have to build a bit of code foe the reset.
-    source_code += indent_str + f"if ({inner_expression}) {{\n"
+    # for-each statements don't use the inner_immediate states in any particular
+    # way.
+    ic.owned_states = inner_ic.owned_states
+    ic.owned_locals = inner_ic.owned_locals
+    # The each loops don't have any state, but we have to build a bit of code
+    # for the reset.
+    ic.source_code += oc.indent_str + f"if ({inner_expression}) {{\n"
     # We have to reset all the states owned by the body of the loop.
-    for state in owned_states:
-        source_code += indent_str + "\t" + f"{state} = 0;\n"
+    for state in ic.owned_states:
+        ic.source_code += oc.indent_str + "\t" + f"{state} = 0;\n"
     # Closing the reset statement and beginning the statement of the body.
-    source_code += indent_str + "}\n"
+    ic.source_code += oc.indent_str + "}\n"
     # Adding the code for the inner body.
-    source_code += inner_body
-    # Returning the source code, the immediate states and the owned states. Note
-    # that an each loop never ends.
-    return source_code, "0", owned_states
+    ic.source_code += inner_ic.source_code
+    # Returning the source code, the immediate states and the owned states.
+    return ic
 
 
-def codegen_seq(statement: ast.Seq, indent: int) -> Tuple[str, str, List[str]]:
+def codegen_seq(statement: ast.Seq, oc: OuterContext) -> InnerContext:
     """
     Specialized variant of codegen_statement for seq statements.
     """
-    source_code = ""
-    # We quickly compute the indentation string we will need for this statement.
-    indent_str = "\t" * indent
+    # The Inner Context we will return.
+    ic = InnerContext()
     # We need a state to keep track of the sequential execution.
     seq_state = SSAGenerator.new_name("seq")
-    # Used to keep track of all the owned states.
-    owned_states: List[str] = [seq_state]
-    # We build some code for each of the inner sequential statements.
+    # We add our new state to the list of states we need to keep track of.
+    ic.owned_states.append(seq_state)
+    # We build some code for each of the inner sequential statements. We first
+    # have to create the context for those future statement.
+    inner_oc = OuterContext(indent=oc.indent + 1)
     for index, inner_statement in enumerate(statement.statements):
         # We build the code for the inner body of the seq statement.
-        inner_body, inner_immediate, inner_states = codegen_statement(
-            inner_statement, indent + 1
-        )
+        inner_ic = codegen_statement(inner_statement, inner_oc)
         # We keep track of all the states owned by our seq statement.
-        owned_states += inner_states
+        ic.owned_states.extend(inner_ic.owned_states)
+        # Same for the local variables.
+        ic.owned_locals.extend(inner_ic.owned_locals)
         # We add the code for the case. Note that we always use ifs (and never
         # else) to fall to the next case whenever possible.
-        source_code += indent_str + f"if ({seq_state} == {index}) {{\n"
+        ic.source_code += oc.indent_str + f"if ({seq_state} == {index}) {{\n"
         # We add the source code for the statement executed sequentially.
-        source_code += inner_body
+        ic.source_code += inner_ic.source_code
         # EDGE CASE
-        # If we have reached the last state of the sequential execution, we don't jump.
+        # If we have reached the last state of the sequential execution, we
+        # don't jump.
         if index + 1 == len(statement.statements):
-            source_code += indent_str + "\t" + "/* LAST SEQUENTIAL STATE */\n"
+            ic.source_code += (
+                oc.indent_str + "\t" + "/* LAST SEQUENTIAL STATE */\n"
+            )
         else:
             # We move to the next state if all the immediate states of the inner
             # statement are true, or if there are no immediate states.
-            source_code += (
-                indent_str + "\t" + f"{seq_state} += {inner_immediate};\n"
+            ic.source_code += (
+                oc.indent_str
+                + "\t"
+                + f"{seq_state} += {inner_ic.immediate_state};\n"
             )
         # Closing the if statement.
-        source_code += indent_str + "}\n"
+        ic.source_code += oc.indent_str + "}\n"
     # We return the expected source code. The single immediate state of a seq
     # statement is whether it reached its last state.
-    return (
-        source_code,
-        f"({seq_state} == {len(statement.statements) - 1}",
-        owned_states,
-    )
+    ic.immediate_state = (f"({seq_state} == {len(statement.statements) - 1}",)
+    return ic
 
 
-def codegen_par(statement: ast.Par, indent: int) -> Tuple[str, str, List[str]]:
+def codegen_par(statement: ast.Par, oc: OuterContext) -> InnerContext:
     """
     Specialized variant of codegen_statement for par statements.
     """
-    source_code = ""
-    # We quickly compute the indentation string we will need for this statement.
-    indent_str = "\t" * indent
-    # Used to keep track of all the owned states.
-    owned_states: List[str] = list()
+    # The Inner Context we will return.
+    ic = InnerContext()
     # We also keep track of all the immediate states of our sub statements to
     # build our own immediate state at the end.
     immediate_states: List[str] = list()
@@ -185,53 +183,75 @@ def codegen_par(statement: ast.Par, indent: int) -> Tuple[str, str, List[str]]:
     for index, inner_statement in enumerate(statement.statements):
         # We build the code for the inner body of the par statement. We don't
         # need to indent the code.
-        inner_body, inner_immediate, inner_states = codegen_statement(
-            inner_statement, indent
-        )
+        inner_ic = codegen_statement(inner_statement, oc)
         # We keep track of all the states owned by our seq statement.
-        owned_states += inner_states
+        ic.owned_states.extend(inner_ic.owned_states)
         # We also keep track of the immediate state.
-        immediate_states.append(inner_immediate)
+        immediate_states.append(inner_ic.immediate_state)
         # We add the source code for the statement executed sequentially.
-        source_code += inner_body
+        ic.source_code += inner_ic.source_code
     # We return the expected source code. The single immediate state of a par
     # statement is the intersection of all the immediate states of its children
     # (i.e. the parallel execution ends when all the threads end).
-    return source_code, "(" + " && ".join(immediate_states) + ")", owned_states
+    ic.immediate_state = "(" + " && ".join(immediate_states) + ")"
+    return ic
 
 
 def codegen_await(
-    statement: ast.AwaitStatement, indent: int
-) -> Tuple[str, str, List[str]]:
+    statement: ast.AwaitStatement, oc: OuterContext
+) -> InnerContext:
     """
     Specialized variant of codegen_statement for await statements.
     """
-    # We quickly compute the indentation string we will need for this statement.
-    indent_str = "\t" * indent
+    # The Inner Context we will return.
+    ic = InnerContext()
     # We build the code for the inner expression.
     inner_expression = codegen_expression(statement.expression)
     # We need a new state for the await statement.
     await_state = SSAGenerator.new_name("await")
     # We build the expected source code.
-    source_code = indent_str + f"{await_state} |= {inner_expression};\n"
-    # We return the expected triple.
-    return source_code, await_state, [await_state]
+    ic.source_code = oc.indent_str + f"{await_state} |= {inner_expression};\n"
+    # Our immediate state is given by the "await_state".
+    ic.immediate_state = await_state
+    # We own the new single state associated with the await statement.
+    ic.owned_states.append(await_state)
+    return ic
 
 
 def codegen_emit(
-    statement: ast.EmitStatement, indent: int
-) -> Tuple[str, str, List[str]]:
+    statement: ast.EmitStatement, oc: OuterContext
+) -> InnerContext:
     """
     Specialized variant of codegen_statement for emit statements.
     """
-    # We quickly compute the indentation string we will need for this statement.
-    indent_str = "\t" * indent
+    # The Inner Context we will return.
+    ic = InnerContext()
     # We get the C code for the inner expression (the rvalue).
     inner_expression = codegen_expression(statement.expression)
     # We build the expected source code.
-    source_code = indent_str + f"*{statement.signal} = {inner_expression};\n"
+    ic.source_code = (
+        oc.indent_str + f"*{statement.signal} = {inner_expression};\n"
+    )
     # We return the expected triple. An emit statement always exits instantly.
-    return source_code, "1", list()
+    ic.immediate_state = "1"
+    return ic
+
+
+def codegen_local(
+    statement: ast.EmitStatement, oc: OuterContext
+) -> InnerContext:
+    """
+    Specialized variant of codegen_statement for local statements.
+    """
+    # The Inner Context we will return.
+    ic = InnerContext()
+    # We add a new local to our InnerContext based on the name provided in the
+    # source code.
+    ic.owned_locals.append(statement.name)
+    # There is no code associated with a local statement.
+    # We return the expected triple. A local statement always exits instantly.
+    ic.immediate_state = "1"
+    return ic
 
 
 ##################################### MAIN #####################################

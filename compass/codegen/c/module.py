@@ -25,6 +25,10 @@ from compass.codegen.c.declaration import (
 from compass.codegen.c.statement import (
     codegen_statement,
 )  # Used for recursive codegen
+from compass.codegen.utils import (
+    InnerContext,
+    OuterContext,
+)  # Used for type hints.
 
 ################################### CLASSES ####################################
 
@@ -33,7 +37,7 @@ from compass.codegen.c.statement import (
 ################################## FUNCTIONS ###################################
 
 
-def codegen_module(module: ast.Module) -> Tuple[str, List[str]]:
+def codegen_module(module: ast.Module) -> Tuple[str, List[str], List[str]]:
     """
     Outputs the C code corresponding to the provided Module.
 
@@ -55,12 +59,12 @@ def codegen_module(module: ast.Module) -> Tuple[str, List[str]]:
     # Opening the brackets for the body of the code.
     source_code += ") {\n"
     # Adding the (indented) code for the body of the module.
-    statement_code, _, states = codegen_statement(module.statement, indent=1)
-    source_code += statement_code
+    ic = codegen_statement(module.statement, OuterContext(indent=1))
+    source_code += ic.source_code
     # Closing the brackets.
     source_code += "}\n"
     # Returing the prepared source code.
-    return source_code, states
+    return source_code, ic.owned_states, ic.owned_locals
 
 
 ##################################### MAIN #####################################
