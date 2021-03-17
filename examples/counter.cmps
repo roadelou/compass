@@ -1,0 +1,7 @@
+module counter(input raise, output value) {
+	seq {
+		local inner_counter;
+		emit inner_counter <- inner_counter + (raise == 1);
+		emit value <- inner_counter;
+	}
+}
