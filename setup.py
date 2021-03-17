@@ -50,6 +50,7 @@ def main():
             "compass/codegen/c",
             "compass/codegen/header",
             "compass/codegen/debug",
+            "compass/codegen/utils",
             "compass/frontend",
             "compass/grammar",
         ],
