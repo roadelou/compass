@@ -88,6 +88,8 @@ def codegen_statement(
         return codegen_emit(statement, oc)
     elif isinstance(statement, ast.LocalStatement):
         return codegen_local(statement, oc)
+    elif isinstance(statement, ast.IfStatement):
+        return codegen_if(statement, oc)
     else:
         raise ValueError(f"Unknown statement {statement}")
 
@@ -252,6 +254,54 @@ def codegen_local(
     # We return the expected triple. A local statement always exits instantly.
     ic.immediate_state = "1"
     return ic
+
+
+def codegen_if(statement: ast.EmitStatement, oc: OuterContext) -> InnerContext:
+    """
+    Specialized variant of codegen_statement for if-else statements.
+    """
+    # The Inner Context we will return.
+    ic = InnerContext()
+    # We start by building the code for our conditional expression.
+    inner_expression = codegen_expression(statement.expression)
+    # We also build the code for our indented if statement.
+    inner_ic = codegen_statement(
+        statement.statement, OuterContext(oc.indent + 1)
+    )
+    # Inheriting the owned and local of our inner expression.
+    ic.owned_states.extend(inner_ic.owned_states)
+    ic.owned_locals.extend(inner_ic.owned_locals)
+    # We start by filling the code for the if branch before checking if there is
+    # an else.
+    ic.source_code += f"{oc.indent_str}if ({inner_expression}) {{\n"
+    ic.source_code += inner_ic.source_code
+    ic.source_code += f"{oc.indent_str}}}\n"
+    if statement.else_statement is None:
+        # No else statement, this is the easy case. The immediate state of the
+        # if statement is that of its if branch if it is taken, otherwise it
+        # exits immediately.
+        ic.immediate_state = (
+            f"(!{inner_expression} || {inner_ic.immediate_state} * "
+            f"{inner_expression})"
+        )
+        # We simply return the InnerContext we have built so far.
+        return ic
+    else:
+        # We must add the code for the else statement.
+        else_ic = codegen_statement(
+            statement.else_statement, OuterContext(oc.indent + 1)
+        )
+        # We inherit the locals and states owned by the else statement too.
+        ic.owned_states.extend(else_ic.owned_states)
+        ic.owned_locals.extend(else_ic.owned_locals)
+        # We add the code for the else branch.
+        ic.source_code += (
+            f"{oc.indent_str}else {{\n"
+            f"{else_ic.source_code}"
+            f"{oc.indent_str}}}\n"
+        )
+        # We return the Inner Context we have built.
+        return ic
 
 
 ##################################### MAIN #####################################
