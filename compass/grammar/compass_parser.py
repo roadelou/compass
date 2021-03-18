@@ -116,12 +116,12 @@ class CompassParser(Parser):
         return ast.Par(p.list_statement)
 
     # Creates an if-statement from the "if" branch of the code.
-    @_("IF expression statement")
+    @_('IF expression "{" statement "}"')
     def statement(self, p):
         return ast.IfStatement(p.expression, p.statement)
 
     # Creating an if-statement with an else branch.
-    @_("IF expression statement ELSE statement")
+    @_('IF expression "{" statement "}" ELSE "{" statement "}"')
     def statement(self, p):
         return ast.IfStatement(p.expression, p.statement0, p.statement1)
 
