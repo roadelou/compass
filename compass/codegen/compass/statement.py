@@ -69,6 +69,31 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         inner_body = ";\n".join(inner_statement_bodies) + ";\n"
         # We return the code for the Par statement.
         return indent_str + f"par {{\n{inner_body}" + indent_str + "}"
+    elif isinstance(statement, ast.IfStatement):
+        # The condition to branch on.
+        inner_expression = codegen_expression(statement.expression)
+        # The inner if branch.
+        inner_if = codegen_statement(statement.statement, indent + 1)
+        # Two cases appear, depending whether an else statement was also used.
+        if statement.else_statement is None:
+            return (
+                indent_str
+                + f"if ({inner_expression}) {{\n{inner_if}\n"
+                + indent_str
+                + "}"
+            )
+        else:
+            # The code for the else branch.
+            inner_else = codegen_statement(statement.else_statement, indent + 1)
+            return (
+                indent_str
+                + f"if ({inner_expression}) {{\n{inner_if}\n"
+                + indent_str
+                + f"}} else {{\n{inner_else}\n"
+                + indent_str
+                + "}"
+            )
+
     elif isinstance(statement, ast.AwaitStatement):
         # Getting the expression that we have to await.
         inner_expression = codegen_expression(statement.expression)
