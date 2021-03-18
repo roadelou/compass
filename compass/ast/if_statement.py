@@ -29,7 +29,12 @@ class IfStatement(Statement):
     Class used to represent an if-else statement in the AST.
     """
 
-    def __init__(self, expression: Expression, statement: Statement):
+    def __init__(
+        self,
+        expression: Expression,
+        statement: Statement,
+        else_statement: Optional[Statement] = None,
+    ):
         """
         Constructor of the Await class.
 
@@ -42,8 +47,7 @@ class IfStatement(Statement):
         # Storing the arguments.
         self.expression = expression
         self.statement = statement
-        # Optonal else statement.
-        self.else_statement: Optional[Statement] = None
+        self.else_statement = else_statement
 
 
 ################################## FUNCTIONS ###################################

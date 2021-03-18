@@ -3,24 +3,25 @@
 ################################### METADATA ###################################
 
 # Contributors: roadelou
-# Contacts: 
+# Contacts:
 # Creation Date: 2021-03-16
 # Language: Python3
 
 ################################### IMPORTS ####################################
 
-# Standard library 
-# Your imports from the standard library go here 
+# Standard library
+# Your imports from the standard library go here
 
 
-# External imports 
-# Your imports from other packages go here 
+# External imports
+# Your imports from other packages go here
 
 
-# Internal imports 
+# Internal imports
 from compass.ast.statement import Statement  # Used for inheritance
 
 ################################### CLASSES ####################################
+
 
 class LocalStatement(Statement):
     """
@@ -38,9 +39,10 @@ class LocalStatement(Statement):
         # Storing the arguments
         self.name = name
 
+
 ################################## FUNCTIONS ###################################
 
-# Your functions go here 
+# Your functions go here
 
 ##################################### MAIN #####################################
 

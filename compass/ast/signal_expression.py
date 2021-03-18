@@ -3,25 +3,26 @@
 ################################### METADATA ###################################
 
 # Contributors: roadelou
-# Contacts: 
+# Contacts:
 # Creation Date: 2021-03-14
 # Language: Python3
 
 ################################### IMPORTS ####################################
 
-# Standard library 
-# Your imports from the standard library go here 
+# Standard library
+# Your imports from the standard library go here
 
 
-# External imports 
-# Your imports from other packages go here 
+# External imports
+# Your imports from other packages go here
 
 
-# Internal imports 
-from compass.ast.expression import Expression   # Used for inheritance
-from compass.ast.signal import Signal   # Used for type hints
+# Internal imports
+from compass.ast.expression import Expression  # Used for inheritance
+from compass.ast.signal import Signal  # Used for type hints
 
 ################################### CLASSES ####################################
+
 
 class SignalExpression(Expression):
     """
@@ -40,9 +41,10 @@ class SignalExpression(Expression):
         # Storing the arguments.
         self.signal = signal
 
+
 ################################## FUNCTIONS ###################################
 
-# Your functions go here 
+# Your functions go here
 
 ##################################### MAIN #####################################
 

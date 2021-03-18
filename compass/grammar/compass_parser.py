@@ -38,6 +38,8 @@ class CompassParser(Parser):
 
     # The only precedence rule is that <- should go before emit.
     precedence = (
+        # IF and ELSE are right associative to enable chained statement.
+        ("right", IF, ELSE),
         ("nonassoc", MODULE, INPUT, OUTPUT, EACH, EMIT, AWAIT, SEQ, PAR, LOCAL),
         ("left", ","),  # , is left associative, to solve conflicts
         ("left", ";"),  # , is left associative, to solve conflicts
@@ -112,6 +114,16 @@ class CompassParser(Parser):
     @_('PAR "{" list_statement "}"')
     def statement(self, p):
         return ast.Par(p.list_statement)
+
+    # Creates an if-statement from the "if" branch of the code.
+    @_("IF expression statement")
+    def statement(self, p):
+        return ast.IfStatement(p.expression, p.statement)
+
+    # Creating an if-statement with an else branch.
+    @_("IF expression statement ELSE statement")
+    def statement(self, p):
+        return ast.IfStatement(p.expression, p.statement0, p.statement1)
 
     # Creating a local variable.
     @_("LOCAL NAME")
