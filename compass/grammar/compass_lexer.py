@@ -57,6 +57,8 @@ class CompassLexer(Lexer):
     NAME["await"] = AWAIT
     NAME["emit"] = EMIT
     NAME["local"] = LOCAL
+    NAME["if"] = IF
+    NAME["else"] = ELSE
 
     # We keep track of newlines to count them.
     @_(r"\n+")

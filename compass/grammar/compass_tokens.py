@@ -43,6 +43,8 @@ tokens = {
     "OR",  # || operator.
     "TESTEQ",  # == operator.
     "LOCAL",  # local keyword.
+    "IF",   # The if keyword.
+    "ELSE", # The else keyword.
 }
 
 # Defining the litteral tokens used in the compass language.
