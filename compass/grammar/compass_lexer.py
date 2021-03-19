@@ -32,6 +32,8 @@ class CompassLexer(Lexer):
     tokens = compass_tokens.tokens
     # Ignoring whitespace and tab.
     ignore = " \t"
+    # Ignoring everything in a line after a '#' (for comments).
+    ignore_comment = r"\#.*"
     # Some symbols are used literaly.
     literals = compass_tokens.literals
 
