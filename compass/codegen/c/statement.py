@@ -186,8 +186,10 @@ def codegen_par(statement: ast.Par, oc: OuterContext) -> InnerContext:
         # We build the code for the inner body of the par statement. We don't
         # need to indent the code.
         inner_ic = codegen_statement(inner_statement, oc)
-        # We keep track of all the states owned by our seq statement.
+        # We keep track of all the states owned by our par statement.
         ic.owned_states.extend(inner_ic.owned_states)
+        # We also inherit the local variables from our inner statement.
+        ic.owned_locals.extend(inner_ic.owned_locals)
         # We also keep track of the immediate state.
         immediate_states.append(inner_ic.immediate_state)
         # We add the source code for the statement executed sequentially.
