@@ -1,3 +1,4 @@
+# Simplest example of synchronous programming.
 module abro(input A, input B, input R, output O) {
 	each R {
 		seq {
