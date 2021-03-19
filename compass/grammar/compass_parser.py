@@ -125,6 +125,11 @@ class CompassParser(Parser):
     def statement(self, p):
         return ast.IfStatement(p.expression, p.statement0, p.statement1)
 
+    # Allowing no {} in else branch for chained if else.
+    @_('IF expression "{" statement "}" ELSE statement')
+    def statement(self, p):
+        return ast.IfStatement(p.expression, p.statement0, p.statement1)
+
     # Creating a local variable.
     @_("LOCAL NAME")
     def statement(self, p):
