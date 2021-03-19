@@ -70,7 +70,7 @@ class CompassLexer(Lexer):
     # Used to print error messages when lexer error is encountered.
     def error(self, t):
         # Logging an error message.
-        loggin.error(f"Unrecognized string {t.value}")
+        logging.error(f"Unrecognized string {t.value}")
         self.index += len(t.value)
 
 
