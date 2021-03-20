@@ -43,12 +43,7 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         # We build the code for the reset expression.
         inner_expression = codegen_expression(statement.expression)
         # We return the code for the whole for-each loop.
-        return (
-            indent_str
-            + f"each {inner_expression} {{\n{inner_body}\n"
-            + indent_str
-            + "}"
-        )
+        return f"{indent_str}each {inner_expression}\n{inner_body}"
     elif isinstance(statement, ast.Seq):
         # We build the code for each inner statement.
         inner_statement_bodies = [
@@ -76,22 +71,13 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         inner_if = codegen_statement(statement.statement, indent + 1)
         # Two cases appear, depending whether an else statement was also used.
         if statement.else_statement is None:
-            return (
-                indent_str
-                + f"if ({inner_expression}) {{\n{inner_if}\n"
-                + indent_str
-                + "}"
-            )
+            return f"{indent_str}if ({inner_expression})\n{inner_if}"
         else:
             # The code for the else branch.
             inner_else = codegen_statement(statement.else_statement, indent + 1)
             return (
-                indent_str
-                + f"if ({inner_expression}) {{\n{inner_if}\n"
-                + indent_str
-                + f"}} else {{\n{inner_else}\n"
-                + indent_str
-                + "}"
+                f"{indent_str}if ({inner_expression})\n{inner_if}\n"
+                f"{indent_str}else\n{inner_else}"
             )
 
     elif isinstance(statement, ast.AwaitStatement):
