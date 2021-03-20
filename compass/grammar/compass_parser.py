@@ -60,7 +60,7 @@ class CompassParser(Parser):
 
     # Building a Module from Name + Declarations + Body. The most complex rule
     # in the AST.
-    @_('MODULE NAME "(" list_declaration ")" "{" statement "}"')
+    @_('MODULE NAME "(" list_declaration ")" statement')
     def module(self, p):
         # Returning the Module from the provided description.
         return ast.Module(p.NAME, p.list_declaration, p.statement)
@@ -84,7 +84,7 @@ class CompassParser(Parser):
         return [ast.OutputDeclaration(p.signal)]
 
     # Creating a loop each statement from a reset Signal + Statement body.
-    @_('EACH expression "{" statement "}"')
+    @_('EACH expression statement')
     def statement(self, p):
         # Creating an Each statement.
         return ast.Each(p.expression, p.statement)
@@ -116,17 +116,12 @@ class CompassParser(Parser):
         return ast.Par(p.list_statement)
 
     # Creates an if-statement from the "if" branch of the code.
-    @_('IF expression "{" statement "}"')
+    @_('IF expression statement')
     def statement(self, p):
         return ast.IfStatement(p.expression, p.statement)
 
     # Creating an if-statement with an else branch.
-    @_('IF expression "{" statement "}" ELSE "{" statement "}"')
-    def statement(self, p):
-        return ast.IfStatement(p.expression, p.statement0, p.statement1)
-
-    # Allowing no {} in else branch for chained if else.
-    @_('IF expression "{" statement "}" ELSE statement')
+    @_('IF expression statement ELSE statement')
     def statement(self, p):
         return ast.IfStatement(p.expression, p.statement0, p.statement1)
 
