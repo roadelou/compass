@@ -71,13 +71,17 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
         inner_if = codegen_statement(statement.statement, indent + 1)
         # Two cases appear, depending whether an else statement was also used.
         if statement.else_statement is None:
-            return f"{indent_str}if ({inner_expression})\n{inner_if}"
+            return (
+                f"{indent_str}if ({inner_expression})\n{inner_if}\n"
+                f"{indent_str}endif"
+            )
         else:
             # The code for the else branch.
             inner_else = codegen_statement(statement.else_statement, indent + 1)
             return (
                 f"{indent_str}if ({inner_expression})\n{inner_if}\n"
-                f"{indent_str}else\n{inner_else}"
+                f"{indent_str}else\n{inner_else}\n"
+                f"{indent_str}endif"
             )
 
     elif isinstance(statement, ast.AwaitStatement):

@@ -48,6 +48,8 @@ def codegen_module(module: ast.Module) -> str:
     source_code += ", ".join(code_declarations) + ')\n'
     # Adding the (indented) code for the body of the module.
     source_code += codegen_statement(module.statement, indent=1) + "\n"
+    # Adding the endmodule keyword.
+    source_code += "endmodule\n"
     # Returing the prepared source code.
     return source_code
 
