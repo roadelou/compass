@@ -10,7 +10,7 @@
 ################################### IMPORTS ####################################
 
 # Standard library
-from __future__ import annotaions  # Used for self reference
+from __future__ import annotations  # Used for self reference
 from typing import Optional  # Used for type hints
 
 
