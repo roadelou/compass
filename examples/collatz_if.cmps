@@ -1,7 +1,3 @@
-module collatz_if(input prev, output next) {
-	if (prev % 2 == 0) {
-		emit next <- prev / 2
-	} else {
-		emit next <- 3 * prev + 1
-	}
-}
+module collatz_if(input prev, output next)
+	if (prev % 2 == 0) emit next <- prev / 2
+	else emit next <- 3 * prev + 1

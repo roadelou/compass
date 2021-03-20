@@ -1,3 +1,2 @@
-module collatz(input prev, output next) {
+module collatz(input prev, output next)
 	emit next <- (prev / 2) * (prev % 2 == 0) + (3 * prev + 1) * !(prev % 2 == 0)
-}
