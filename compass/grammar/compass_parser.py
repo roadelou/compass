@@ -38,8 +38,9 @@ class CompassParser(Parser):
 
     # The only precedence rule is that <- should go before emit.
     precedence = (
-        # IF and ELSE are right associative to enable chained statement.
-        ("right", IF, ELSE),
+        ("nonassoc", IF, ELSE),
+        # ELIF is right associative to enable chained statement.
+        ("right", ELIF),
         ("nonassoc", MODULE, INPUT, OUTPUT, EACH, EMIT, AWAIT, SEQ, PAR, LOCAL),
         ("left", ","),  # , is left associative, to solve conflicts
         ("left", ";"),  # , is left associative, to solve conflicts
