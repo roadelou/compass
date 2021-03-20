@@ -31,7 +31,7 @@ class CompassParser(Parser):
     """
 
     # DEBUG
-    # debugfile = "test/files/parser.out"
+    debugfile = "test/files/parser.out"
 
     # The tokens for the Compass language.
     tokens = compass_tokens.tokens
@@ -150,11 +150,6 @@ class CompassParser(Parser):
             reversed(p.list_cond_statement),
             p.statement,
         )
-
-    # Creating an if-statement with an else branch.
-    @_("IF expression statement ELSE statement ENDIF")
-    def statement(self, p):
-        return ast.IfStatement(p.expression, p.statement0, p.statement1)
 
     # Creating a local variable.
     @_("LOCAL NAME")
