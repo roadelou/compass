@@ -7,4 +7,4 @@ module abro(input A, input B, input R, output O)
 		};
 		emit O;
 	}
-
+endmodule
