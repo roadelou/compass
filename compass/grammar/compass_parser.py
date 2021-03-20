@@ -84,7 +84,7 @@ class CompassParser(Parser):
         return [ast.OutputDeclaration(p.signal)]
 
     # Creating a loop each statement from a reset Signal + Statement body.
-    @_('EACH expression statement')
+    @_("EACH expression statement")
     def statement(self, p):
         # Creating an Each statement.
         return ast.Each(p.expression, p.statement)
@@ -115,18 +115,43 @@ class CompassParser(Parser):
     def statement(self, p):
         return ast.Par(p.list_statement)
 
-    # Creates an if-statement from the "if" branch of the code.
-    @_('IF expression statement ENDIF')
+    # Create a conditional statement which can be inserted in an elifchain.
+    @_("expression statement")
+    def list_cond_statement(self, p):
+        # Under the hood we just create a new else-if nested level.
+        return ast.IfStatment(p.expression, p.statement)
+
+    # A chain of conditional statements joined by elif keywords.
+    @_("list_cond_statement ELIF list_cond_statement")
+    def cond_chain(self, p):
+        return p.list_cond_statement0 + p.list_cond_statement1
+
+    # Opens a conditional chain with an if and resolves it.
+    @_("IF cond_chain ENDIF")
     def statement(self, p):
-        return ast.IfStatement(p.expression, p.statement)
+        # Each branch in the conditional chain becomes the else of its
+        # predecessor. We iterate over the list backwards since it makes the
+        # process more convenient.
+        return reduce(
+            lambda else_branch, if_branch: if_branch.with_else(else_branch),
+            p.cond_chain.reverse(),
+        )
+
+    # Opens a conditional chain with an if and a final else.
+    @_("IF cond_chain ELSE statement ENDIF")
+    def statement(self, p):
+        # Each branch in the conditional chain becomes the else of its
+        # predecessor. We iterate over the list backwards since it makes the
+        # process more convenient. We also use the else statement as a base
+        # value.
+        return reduce(
+            lambda else_branch, if_branch: if_branch.with_else(else_branch),
+            p.cond_chain.reverse(),
+            initializer=p.statement,
+        )
 
     # Creating an if-statement with an else branch.
-    @_('IF expression statement ELSE statement ENDIF')
-    def statement(self, p):
-        return ast.IfStatement(p.expression, p.statement0, p.statement1)
-
-    # Optional endif for if-else chains.
-    @_('IF expression statement ELSE statement')
+    @_("IF expression statement ELSE statement ENDIF")
     def statement(self, p):
         return ast.IfStatement(p.expression, p.statement0, p.statement1)
 

@@ -29,7 +29,7 @@
 # Defining once all the tokens used for the compass language.
 tokens = {
     "MODULE",  # module keyword.
-    "ENDMODULE", # endmodule keyword.
+    "ENDMODULE",  # endmodule keyword.
     "INPUT",  # input keyword.
     "OUTPUT",  # output keyword.
     "NAME",  # string used to identify somathing (probably a signal).
@@ -45,8 +45,9 @@ tokens = {
     "TESTEQ",  # == operator.
     "LOCAL",  # local keyword.
     "IF",  # The if keyword.
+    "ELIF",  # The elif keyword.
     "ELSE",  # The else keyword.
-    "ENDIF", # The endif keyword.
+    "ENDIF",  # The endif keyword.
 }
 
 # Defining the litteral tokens used in the compass language.

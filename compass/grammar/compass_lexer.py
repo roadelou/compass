@@ -61,6 +61,7 @@ class CompassLexer(Lexer):
     NAME["emit"] = EMIT
     NAME["local"] = LOCAL
     NAME["if"] = IF
+    NAME["elif"] = ELIF
     NAME["else"] = ELSE
     NAME["endif"] = ENDIF
 
