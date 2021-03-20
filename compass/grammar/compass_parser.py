@@ -10,7 +10,7 @@
 ################################### IMPORTS ####################################
 
 # Standard library
-# Your imports from the standard library go here
+from functools import reduce    # Used for elif chains
 
 
 # External imports
@@ -119,26 +119,26 @@ class CompassParser(Parser):
     @_("expression statement")
     def list_cond_statement(self, p):
         # Under the hood we just create a new else-if nested level.
-        return ast.IfStatment(p.expression, p.statement)
+        return [ast.IfStatement(p.expression, p.statement)]
 
     # A chain of conditional statements joined by elif keywords.
     @_("list_cond_statement ELIF list_cond_statement")
-    def cond_chain(self, p):
+    def list_cond_statement(self, p):
         return p.list_cond_statement0 + p.list_cond_statement1
 
     # Opens a conditional chain with an if and resolves it.
-    @_("IF cond_chain ENDIF")
+    @_("IF list_cond_statement ENDIF")
     def statement(self, p):
         # Each branch in the conditional chain becomes the else of its
         # predecessor. We iterate over the list backwards since it makes the
         # process more convenient.
         return reduce(
             lambda else_branch, if_branch: if_branch.with_else(else_branch),
-            p.cond_chain.reverse(),
+            reversed(p.list_cond_statement),
         )
 
     # Opens a conditional chain with an if and a final else.
-    @_("IF cond_chain ELSE statement ENDIF")
+    @_("IF list_cond_statement ELSE statement ENDIF")
     def statement(self, p):
         # Each branch in the conditional chain becomes the else of its
         # predecessor. We iterate over the list backwards since it makes the
@@ -146,8 +146,8 @@ class CompassParser(Parser):
         # value.
         return reduce(
             lambda else_branch, if_branch: if_branch.with_else(else_branch),
-            p.cond_chain.reverse(),
-            initializer=p.statement,
+            reversed(p.list_cond_statement),
+            p.statement,
         )
 
     # Creating an if-statement with an else branch.
