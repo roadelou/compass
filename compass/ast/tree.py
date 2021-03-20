@@ -39,6 +39,12 @@ class Tree:
         # Storing the arguments.
         self.module = module
 
+    def rename(self, name: str):
+        """
+        Renames the main module in the AST to the provided name.
+        """
+        self.module.rename(name)
+
 
 ################################## FUNCTIONS ###################################
 

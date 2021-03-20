@@ -50,6 +50,12 @@ class Module(Node):
         self.declarations = list_declaration
         self.statement = statement
 
+    def rename(self, name: str):
+        """
+        Renames the module to the provided value.
+        """
+        self.name = name
+
 
 ################################## FUNCTIONS ###################################
 
