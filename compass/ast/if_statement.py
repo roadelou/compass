@@ -10,6 +10,7 @@
 ################################### IMPORTS ####################################
 
 # Standard library
+from __future__ import annotaions  # Used for self reference
 from typing import Optional  # Used for type hints
 
 
@@ -48,6 +49,20 @@ class IfStatement(Statement):
         self.expression = expression
         self.statement = statement
         self.else_statement = else_statement
+
+    def with_else(self, statement: Statement) -> IfStatement:
+        """
+        Adds the provided statement as an else statement to the current one and
+        returns the updated statement with the two branches.
+
+        Arguments
+        =========
+         - statement: The statement to use in the else branch.
+        """
+        # We return a new IfStatement to avoid side effects.
+        return IfStatement(
+            self.expression, self.statement, else_statement=statement
+        )
 
 
 ################################## FUNCTIONS ###################################
