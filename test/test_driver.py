@@ -52,7 +52,7 @@ def test_compass_compiler():
         with open(example, "r") as compass_file:
             compass_source = compass_file.read()
         # Runs the compilation to compass target.
-        compass_compiled = compass_compile(compass_source, "compass")
+        compass_compiled = compass_compile(compass_source, "compass", None)
         # Creating the path for the compiled file.
         compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.cmps"
@@ -73,7 +73,7 @@ def test_c_compiler():
         with open(example, "r") as compass_file:
             compass_source = compass_file.read()
         # Runs the compilation to compass target.
-        compass_compiled = compass_compile(compass_source, "C")
+        compass_compiled = compass_compile(compass_source, "C", None)
         # Creating the path for the compiled file.
         compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.c"
@@ -94,7 +94,7 @@ def test_header_compiler():
         with open(example, "r") as compass_file:
             compass_source = compass_file.read()
         # Runs the compilation to compass target.
-        compass_compiled = compass_compile(compass_source, "header")
+        compass_compiled = compass_compile(compass_source, "header", None)
         # Creating the path for the compiled file.
         compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.h"
@@ -115,7 +115,7 @@ def test_debug_compiler():
         with open(example, "r") as compass_file:
             compass_source = compass_file.read()
         # Runs the compilation to compass target.
-        compass_compiled = compass_compile(compass_source, "debug")
+        compass_compiled = compass_compile(compass_source, "debug", None)
         # Creating the path for the compiled file.
         compiled_path = example.replace("examples/", "test/files/").replace(
             ".cmps", "_compiled.debug.c"
