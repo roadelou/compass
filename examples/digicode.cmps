@@ -1,0 +1,80 @@
+# Takes a new digit as input and outputs the status of the lock. Values are:
+# - 0: The lock remains locked, nothing happens.
+# - 1: A false 4 digits combination has been entered, the lock remains locked.
+# - 2: The right combination (1234 here) has been entered, the lock opens.
+#
+# The lock will remain opened until the close signal is sent. We also assume
+# that the module is called by some sort of interrupt each time a new digit is
+# pressed, otherwise some enable signal should be given as input.
+module digicode(input digit, input close, output status) par {
+	# When the user fails to enter the right combination, the lock doesn't stay
+	# blocked ans lets them try a new combination.
+	local new_try;
+	# By default we keep doing the current try.
+	emit new_try <- 0;
+	# Used to block the execution flow until a next digit is entered. This
+	# makes it so that the FSM doesn't read multiple times the same digit
+	# from the input.
+	local wait_next;
+	# Each time the module is called, wait_next is reset to true.
+	emit wait_next <- 1;
+	# We emit the locked status by default.
+	emit status <- 0;
+	# Set to true whenever a false combination is entered. The failure
+	# will of course only be reported once the 4 digits have been
+	# entered.
+	local is_failed;
+	# We reset the state of the lock whenever a failed attempt is over or when
+	# the user closes an opened lock.
+	each new_try || close seq {
+		# Whenever the lock is closed or initialy, we reset is_failed.
+		emit is_failed <- 0;
+
+		# We wait for the next digit to be entered.
+		await wait_next;
+		# We reset the wait_next flag so that it fails for the next awaits
+		# this instant.
+		emit wait_next <- 0;
+		# We update is_failed depending on the input the user entered. The
+		# first digit of the lock should be '1'.
+		emit is_failed <- !(digit == 1) || is_failed;
+
+		# We wait for the next input.
+		await wait_next;
+		# We reset the wait_next flag so that it fails for the next awaits
+		# this instant.
+		emit wait_next <- 0;
+		# We test the second digit, which should be '2'.
+		emit is_failed <- !(digit == 2) || is_failed;
+
+		# We wait for the next input.
+		await wait_next;
+		# We reset the wait_next flag so that it fails for the next awaits
+		# this instant.
+		emit wait_next <- 0;
+		# We test the third digit, which should be '3'.
+		emit is_failed <- !(digit == 3) || is_failed;
+
+		# We wait for the next input.
+		await wait_next;
+		# We reset the wait_next flag so that it fails for the next awaits
+		# this instant.
+		emit wait_next <- 0;
+		# We test the last digit, which should be '4'.
+		emit is_failed <- !(digit == 4) || is_failed;
+
+		# We provide feedback to the user based on the combination they
+		# entered.
+		if is_failed seq {
+			# We provide some feedback to the user then reset the lock.
+			emit status <- 1;
+			emit new_try <- 1;
+		}
+		else
+			# We provide some feedback to the user, the lock is open. This
+			# will be reset once the lock closes.
+			emit status <- 2
+		endif;
+	}
+}
+endmodule
