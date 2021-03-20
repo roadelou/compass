@@ -50,7 +50,7 @@ compass --lang debug abro.cmps
 
 # Examples
 
-Some examples of the language can be found in the [examples](https://github.com/roadelou/compass/examples) folder.
+Some examples of the language can be found in the [examples](https://github.com/roadelou/compass/tree/master/examples) folder.
 
 # Features
 
