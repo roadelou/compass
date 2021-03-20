@@ -31,7 +31,7 @@ class CompassParser(Parser):
     """
 
     # DEBUG
-    debugfile = "test/files/parser.out"
+    # debugfile = "test/files/parser.out"
 
     # The tokens for the Compass language.
     tokens = compass_tokens.tokens
