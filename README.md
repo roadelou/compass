@@ -9,17 +9,15 @@ Unlike Esterel, Compass is very bare bones and uses a rather trivial compilation
 The __ABRO__ code example adapted for Compass looks like :arrow_down_small:
 
 ```
-module abro(input A, input B, input R, output O) {
-    each R {
-        seq {
-            par {
-                await A;
-                await B;
-            };
-            emit O;
-        }
+module abro(input A, input B, input R, output O)
+    each R seq {
+        par {
+            await A;
+            await B;
+        };
+        emit O;
     }
-}
+endmodule
 ```
 
 # Installation
@@ -56,14 +54,12 @@ Some examples of the language can be found in the [examples](https://github.com/
 
 # Features
 
-This section details what language features are currently available in __compass__ :compass: and which ones are planned.
-
-## Current features
-
 The version of compass in the repository supports:
 
- - Input and output signals
+ - `input` and `output` signals
+ - `local` variables
  - `each`, `par`, `seq`, `await` and `emit` statements
+ - Conditional tests with `if`, `elif`, `else` and `endif`
  - Many C-inspired operators for expressions
 
 :warning: Be careful about the syntax for end-of lines. The `;` operator should only be used to separate several statements in a list of statements, i.e. only in `seq` and `par` blocks. The last `;` is optional by the way.
