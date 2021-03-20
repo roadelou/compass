@@ -51,6 +51,7 @@ class CompassLexer(Lexer):
 
     # Remapping the language keywords when they are found within the string.
     NAME["module"] = MODULE
+    NAME["endmodule"] = ENDMODULE
     NAME["input"] = INPUT
     NAME["output"] = OUTPUT
     NAME["each"] = EACH
@@ -61,6 +62,7 @@ class CompassLexer(Lexer):
     NAME["local"] = LOCAL
     NAME["if"] = IF
     NAME["else"] = ELSE
+    NAME["endif"] = ENDIF
 
     # We keep track of newlines to count them.
     @_(r"\n+")
