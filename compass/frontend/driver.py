@@ -41,7 +41,8 @@ def compass_compile(source_code: str, target: str) -> str:
     Arguments
     =========
      - source_code: The source code to compile.
-     - target: The target to compile to. Valid targets are detailed in the documentation.
+     - target: The target to compile to. Valid targets are detailed in the
+        documentation.
 
     Returns
     =======
@@ -51,7 +52,12 @@ def compass_compile(source_code: str, target: str) -> str:
     tokens = CompassLexer().tokenize(source_code)
     # We then build the AST from the tokens.
     ast = CompassParser().parse(tokens)
-    # The we turn the AST into source code using the right codegen based on the provided target.
+    # If the parsing step failed because of syntax errors, the AST will be None
+    # here.
+    if ast is None:
+        raise ValueError("Source code could not be parsed")
+    # The we turn the AST into source code using the right codegen based on the
+    # provided target.
     if target == "compass":
         return codegen_compass(ast)
     elif target in ["C", "c"]:
