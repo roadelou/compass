@@ -10,7 +10,7 @@
 ################################### IMPORTS ####################################
 
 # Standard library
-# Your imports from the standard library go here
+from typing import Optional  # Used for type hints
 
 
 # External imports
@@ -34,7 +34,9 @@ from compass.codegen.debug import codegen_tree as codegen_debug
 ################################## FUNCTIONS ###################################
 
 
-def compass_compile(source_code: str, target: str) -> str:
+def compass_compile(
+    source_code: str, target: str, rename: Optional[str]
+) -> str:
     """
     Runs the compilation process for the provided source code.
 
@@ -43,6 +45,8 @@ def compass_compile(source_code: str, target: str) -> str:
      - source_code: The source code to compile.
      - target: The target to compile to. Valid targets are detailed in the
         documentation.
+     - rename: The new name to use for the module in the compiled code. This is
+        usefull to create several modules from the same source code.
 
     Returns
     =======
@@ -52,17 +56,23 @@ def compass_compile(source_code: str, target: str) -> str:
     tokens = CompassLexer().tokenize(source_code)
     # We then build the AST from the tokens.
     ast = CompassParser().parse(tokens)
+
     # If the parsing step failed because of syntax errors, the AST will be None
     # here.
     if ast is None:
         raise ValueError("Source code could not be parsed")
+
+    # We rename the compiled module if we were asked to.
+    if rename is not None:
+        ast.rename(rename)
+
     # The we turn the AST into source code using the right codegen based on the
     # provided target.
     if target == "compass":
         return codegen_compass(ast)
     elif target in ["C", "c"]:
         return codegen_c(ast)
-    elif target in ["H", 'h', "header"]:
+    elif target in ["H", "h", "header"]:
         return codegen_header(ast)
     elif target == "debug":
         return codegen_debug(ast)

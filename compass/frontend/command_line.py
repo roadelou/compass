@@ -42,7 +42,7 @@ def command_line():
         source_code = source_file.read()
 
     # We call the compiler driver with the right arguments.
-    built_code = compass_compile(source_code, arguments.LANG)
+    built_code = compass_compile(source_code, arguments.LANG, arguments.RENAME)
 
     # We write the compiled code to the provided output file. If no output file
     # was provided, we try to use a default one based on the input path and the
@@ -81,6 +81,16 @@ def build_frontend_parser() -> argparse.ArgumentParser:
         choices=["compass", "C", "c", "H", "h", "header", "debug"],
         type=str,
         help="The language to compile for",
+    )
+    # Adding an option to rename the built module. This is usefull to create
+    # multiple instances of the same module.
+    cli_parser.add_argument(
+        "-r",
+        "--rename",
+        dest="RENAME",
+        default=None,
+        type=str,
+        help="The new name to use for the compiled module",
     )
     # Returning the built parser.
     return cli_parser
