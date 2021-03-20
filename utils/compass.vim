@@ -17,14 +17,28 @@ syn case ignore
 
 " Compass Keywords
 syn keyword compassIO input output
-syn keyword compassStatement each seq par await emit
-syn keyword compassModule module
+syn keyword compassStatement each seq par await emit local
+syn keyword compassStatement if elif else endif
+syn keyword compassModule module endmodule
 " Operators and special characters
 syn match compassSpecial ","
 syn match compassSpecial ";"
 syn match compassSpecial "<-"
+syn match compassSpecial "=="
+syn match compassSpecial "+"
+syn match compassSpecial "-"
+syn match compassSpecial "*"
+syn match compassSpecial "/"
+syn match compassSpecial "%"
+syn match compassSpecial "||"
+syn match compassSpecial "&&"
+syn match compassSpecial "!"
+syn match compassComment "#.*$"
+
 " Esterel Block
 syn region compassBlock start="{" end="}" transparent fold
+syn region compassModule start="module" end="endmodule" transparent fold
+syn region compassModule start="if" end="endif" transparent fold
 
 " Class linking
 hi def link compassIO String
@@ -32,5 +46,6 @@ hi def link compassStatement Statement
 hi def link compassModule Type
 hi def link compassSpecial Special
 hi def link compassIO String
+hi def link compassComment Comment
 
 let b:current_syntax = "compass"
