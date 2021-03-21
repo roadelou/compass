@@ -52,6 +52,7 @@ class CompassLexer(Lexer):
     # Remapping the language keywords when they are found within the string.
     NAME["module"] = MODULE
     NAME["endmodule"] = ENDMODULE
+    NAME["submodule"] = SUBMODULE
     NAME["input"] = INPUT
     NAME["output"] = OUTPUT
     NAME["each"] = EACH

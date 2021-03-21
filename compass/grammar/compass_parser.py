@@ -10,7 +10,7 @@
 ################################### IMPORTS ####################################
 
 # Standard library
-from functools import reduce    # Used for elif chains
+from functools import reduce  # Used for elif chains
 
 
 # External imports
@@ -41,7 +41,19 @@ class CompassParser(Parser):
         ("nonassoc", IF, ELSE),
         # ELIF is right associative to enable chained statement.
         ("right", ELIF),
-        ("nonassoc", MODULE, INPUT, OUTPUT, EACH, EMIT, AWAIT, SEQ, PAR, LOCAL),
+        (
+            "nonassoc",
+            MODULE,
+            INPUT,
+            OUTPUT,
+            EACH,
+            EMIT,
+            AWAIT,
+            SEQ,
+            PAR,
+            LOCAL,
+            SUBMODULE,
+        ),
         ("left", ","),  # , is left associative, to solve conflicts
         ("left", ";"),  # , is left associative, to solve conflicts
         ("nonassoc", ASSIGN),
@@ -150,6 +162,21 @@ class CompassParser(Parser):
             reversed(p.list_cond_statement),
             p.statement,
         )
+
+    # Turns a single signal into a list of one arguments for submodule call.
+    @_("signal")
+    def list_argument(self, p):
+        return [p.signal]
+
+    # Joins two lists of arguments separated by a ",".
+    @_('list_argument "," list_argument')
+    def list_argument(self, p):
+        return p.list_argument0 + p.list_argument1
+
+    # Calls a submodule with its arguments.
+    @_('SUBMODULE NAME "(" list_argument ")"')
+    def statement(self, p):
+        return ast.Submodule(p.NAME, p.list_argument)
 
     # Creating a local variable.
     @_("LOCAL NAME")

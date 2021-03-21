@@ -30,6 +30,7 @@
 tokens = {
     "MODULE",  # module keyword.
     "ENDMODULE",  # endmodule keyword.
+    "SUBMODULE",  # submodule keyword.
     "INPUT",  # input keyword.
     "OUTPUT",  # output keyword.
     "NAME",  # string used to identify somathing (probably a signal).
