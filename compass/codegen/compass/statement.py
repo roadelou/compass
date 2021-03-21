@@ -85,7 +85,9 @@ def codegen_statement(statement: ast.Statement, indent: int) -> str:
             )
     elif isinstance(statement, ast.Submodule):
         # We create code for the list of arguments.
-        code_arguments = ", ".join(statement.arguments)
+        code_arguments = ", ".join(
+            [str(signal) for signal in statement.arguments]
+        )
         # We return the code that calls the submodule with the right arguments.
         return f"{indent_str}submodule {statement.name}({code_arguments})"
     elif isinstance(statement, ast.AwaitStatement):
