@@ -10,7 +10,8 @@
 ################################### IMPORTS ####################################
 
 # Standard library
-from typing import List, Optional  # Used for type hints.
+from __future__ import annotations  # Used for self reference
+from typing import List, Optional  # Used for type hints
 
 
 # External imports
@@ -40,6 +41,7 @@ class InnerContext:
         immediate_state: Optional[str] = None,
         owned_states: Optional[List[str]] = None,
         owned_locals: Optional[List[str]] = None,
+        owned_submodules: Optional[List[str]] = None,
     ):
         """
         Constructor of the InnerContext class.
@@ -53,6 +55,8 @@ class InnerContext:
             statement and all its children.
          - owned_locals: The list of all the local variables owned by this
             statement and its children.
+         - owned_locals: The list of all the submodules used by this statement
+            and its children.
         """
         # Storing the arguments
         if source_code is None:
@@ -75,6 +79,18 @@ class InnerContext:
         else:
             self.owned_locals = owned_locals
 
+        if owned_submodules is None:
+            self.owned_submodules = list()
+        else:
+            self.owned_submodules = owned_submodules
+
+    def inherit(self, ic: InnerContext):
+        """
+        Inherits all the recursive variables from the provided InnerContext.
+        """
+        self.owned_states.extend(ic.owned_states)
+        self.owned_locals.extend(ic.owned_locals)
+        self.owned_submodules.extend(ic.owned_submodules)
 
 ################################## FUNCTIONS ###################################
 
