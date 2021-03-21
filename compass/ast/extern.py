@@ -3,55 +3,51 @@
 ################################### METADATA ###################################
 
 # Contributors: roadelou
-# Contacts:
-# Creation Date: 2021-03-12
+# Contacts: 
+# Creation Date: 2021-03-21
 # Language: Python3
 
 ################################### IMPORTS ####################################
 
-# Standard library
+# Standard library 
 from typing import List  # Used for type hints
 
 
-# External imports
-# Your imports from other packages go here
+# External imports 
+# Your imports from other packages go here 
 
 
-# Internal imports
-from compass.ast.module import Module  # Used for type hints
-from compass.ast.extern import Extern  # Used for type hints
+# Internal imports 
+from compass.ast.node import Node  # Used for inheritance
+from compass.ast.declaration import Declaration  # Used for type hints
 
 ################################### CLASSES ####################################
 
-
-class Tree:
+class Extern(Node):
     """
-    Class used to hold the AST of the compass language.
+    Class used to represent the declaration of extern submodules in the AST.
     """
 
-    def __init__(self, module: Module, list_extern: List[Extern]):
+    def __init__(
+        self,
+        name: str,
+        list_declaration: List[Declaration],
+    ):
         """
-        Constructor of the Tree clas.
+        Constructor of the Extern class.
 
         Arguments
         =========
-         - module: The Module declared in the current file.
-         - list_extern: The list of declared extern submodules for this module.
+         - name: The name to use for this subodule.
+         - list_declaration: The inputs and outputs declared for this subodule.
         """
         # Storing the arguments.
-        self.module = module
-        self.externs = list_extern
-
-    def rename(self, name: str):
-        """
-        Renames the main module in the AST to the provided name.
-        """
-        self.module.rename(name)
-
+        self.name = name
+        self.declarations = list_declaration
 
 ################################## FUNCTIONS ###################################
 
-# Your functions go here
+# Your functions go here 
 
 ##################################### MAIN #####################################
 

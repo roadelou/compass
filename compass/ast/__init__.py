@@ -22,6 +22,7 @@ from compass.ast.await_statement import AwaitStatement
 from compass.ast.each import Each
 from compass.ast.emit_statement import EmitStatement
 from compass.ast.expression import Expression
+from compass.ast.extern import Extern
 from compass.ast.if_statement import IfStatement
 from compass.ast.input_declaration import InputDeclaration
 from compass.ast.local_statement import LocalStatement
