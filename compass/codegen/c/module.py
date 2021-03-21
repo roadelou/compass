@@ -46,6 +46,7 @@ def codegen_module(module: ast.Module) -> Tuple[str, List[str], List[str]]:
     A tuple with two values:
      - The source code for the inner module.
      - The states that have to be statically allocated for the module.
+     - The local variables that have to be statically allocated for the module.
     """
     source_code = ""
     # Adding the name of the module.

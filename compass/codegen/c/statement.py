@@ -90,6 +90,8 @@ def codegen_statement(
         return codegen_local(statement, oc)
     elif isinstance(statement, ast.IfStatement):
         return codegen_if(statement, oc)
+    elif isinstance(statement, ast.Submodule):
+        return codegen_submodule(statement, oc)
     else:
         raise ValueError(f"Unknown statement {statement}")
 
@@ -106,8 +108,7 @@ def codegen_each(statement: ast.Each, oc: OuterContext) -> InnerContext:
     inner_expression = codegen_expression(statement.expression)
     # for-each statements don't use the inner_immediate states in any particular
     # way.
-    ic.owned_states = inner_ic.owned_states
-    ic.owned_locals = inner_ic.owned_locals
+    ic.inherit(inner_ic)
     # The each loops don't have any state, but we have to build a bit of code
     # for the reset.
     ic.source_code += oc.indent_str + f"if ({inner_expression}) {{\n"
@@ -138,10 +139,8 @@ def codegen_seq(statement: ast.Seq, oc: OuterContext) -> InnerContext:
     for index, inner_statement in enumerate(statement.statements):
         # We build the code for the inner body of the seq statement.
         inner_ic = codegen_statement(inner_statement, inner_oc)
-        # We keep track of all the states owned by our seq statement.
-        ic.owned_states.extend(inner_ic.owned_states)
-        # Same for the local variables.
-        ic.owned_locals.extend(inner_ic.owned_locals)
+        # We inherit the recursive values from the InnerContext.
+        ic.inherit(inner_ic)
         # We add the code for the case. Note that we always use ifs (and never
         # else) to fall to the next case whenever possible.
         ic.source_code += oc.indent_str + f"if ({seq_state} == {index}) {{\n"
@@ -186,10 +185,8 @@ def codegen_par(statement: ast.Par, oc: OuterContext) -> InnerContext:
         # We build the code for the inner body of the par statement. We don't
         # need to indent the code.
         inner_ic = codegen_statement(inner_statement, oc)
-        # We keep track of all the states owned by our par statement.
-        ic.owned_states.extend(inner_ic.owned_states)
-        # We also inherit the local variables from our inner statement.
-        ic.owned_locals.extend(inner_ic.owned_locals)
+        # We inherit the recursive values from the InnerContext.
+        ic.inherit(inner_ic)
         # We also keep track of the immediate state.
         immediate_states.append(inner_ic.immediate_state)
         # We add the source code for the statement executed sequentially.
@@ -258,7 +255,7 @@ def codegen_local(
     return ic
 
 
-def codegen_if(statement: ast.EmitStatement, oc: OuterContext) -> InnerContext:
+def codegen_if(statement: ast.IfStatement, oc: OuterContext) -> InnerContext:
     """
     Specialized variant of codegen_statement for if-else statements.
     """
@@ -271,8 +268,7 @@ def codegen_if(statement: ast.EmitStatement, oc: OuterContext) -> InnerContext:
         statement.statement, OuterContext(oc.indent + 1)
     )
     # Inheriting the owned and local of our inner expression.
-    ic.owned_states.extend(inner_ic.owned_states)
-    ic.owned_locals.extend(inner_ic.owned_locals)
+    ic.inherit(inner_ic)
     # We start by filling the code for the if branch before checking if there is
     # an else.
     ic.source_code += f"{oc.indent_str}if ({inner_expression}) {{\n"
@@ -293,9 +289,8 @@ def codegen_if(statement: ast.EmitStatement, oc: OuterContext) -> InnerContext:
         else_ic = codegen_statement(
             statement.else_statement, OuterContext(oc.indent + 1)
         )
-        # We inherit the locals and states owned by the else statement too.
-        ic.owned_states.extend(else_ic.owned_states)
-        ic.owned_locals.extend(else_ic.owned_locals)
+        # We also inherit the InnerContext from the else branch.
+        ic.inherit(else_ic)
         # We add the code for the else branch.
         ic.source_code += (
             f"{oc.indent_str}else {{\n"
@@ -304,6 +299,27 @@ def codegen_if(statement: ast.EmitStatement, oc: OuterContext) -> InnerContext:
         )
         # We return the Inner Context we have built.
         return ic
+
+
+def codegen_submodule(
+    statement: ast.Submodule, oc: OuterContext
+) -> InnerContext:
+    """
+    Specialized variant of codegen_statement for submodule statements.
+    """
+    # The inner context we will return.
+    ic = InnerContext()
+    # All the argument signals are already pointers, which is what the callee
+    # expects, hence we may directly build the code for the arguments.
+    code_arguments = ", ".join([str(signal) for signal in statement.arguments])
+    # We then simply call the the C function associated with the module by name.
+    ic.source_code += f"{oc.indent_str}{statement.name}({code_arguments});\n"
+    # A submodule call is always instantaneous, like an emit.
+    ic.immediate_state = "1"
+    # We add the new submodule to the owned submodules.
+    ic.owned_submodules.append(statement.name)
+    # We return the newly built context.
+    return ic
 
 
 ##################################### MAIN #####################################
