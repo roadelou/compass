@@ -33,7 +33,7 @@ cd compass
 pip3 install .
 ``` 
 
-A [PyPi package](https://pypi.org/project/roadelou-compass/) is also available for the compiler, and it can be installed with `pip3 install roadelou_compass` :tada:
+A [PyPi package](https://pypi.org/project/roadelou-compass/) is also available for the compiler, and it can be installed with `pip3 install roadelou-compass` :tada:
 
 # Usage
 
