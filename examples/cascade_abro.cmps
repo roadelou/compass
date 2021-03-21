@@ -1,0 +1,15 @@
+# A small example to show the use of the submodule statement.
+module cascade_abro(input A, input B, input C, input D, input R1, input R2, output O) par {
+	# Creating local variables for the output of the two abro submodules.
+	local O1;
+	local O2;
+	# We call the first abro submodule with its arguments.
+	submodule abro(A, B, R1, O1);
+	# We call the second abro submodule. Note that a compass module may only be
+	# instanciated once, so we have to use a different name for this second
+	# submodule, which will require its own C and objects files.
+	submodule abro2(A, B, R2, O2);
+	# We only emit O if both O1 and O2 are set.
+	emit O <- O1 && O2;
+}
+endmodule
