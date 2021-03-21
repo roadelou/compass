@@ -1,4 +1,9 @@
 # A small example to show the use of the submodule statement.
+#
+# We start by declaring the extern submodules used in this module.
+extern abro(input A, input B, input R, output O);
+extern abro2(input A, input B, input R, output O);
+
 module cascade_abro(input A, input B, input C, input D, input R1, input R2, output O) par {
 	# Creating local variables for the output of the two abro submodules.
 	local O1;
