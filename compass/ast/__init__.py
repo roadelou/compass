@@ -35,6 +35,7 @@ from compass.ast.signal import Signal
 from compass.ast.signal_expression import SignalExpression
 from compass.ast.declaration import Declaration
 from compass.ast.statement import Statement
+from compass.ast.submodule import Submodule
 from compass.ast.tree import Tree
 from compass.ast.unary import *
 from compass.ast.binary import *
