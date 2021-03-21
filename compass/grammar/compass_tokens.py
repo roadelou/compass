@@ -49,6 +49,7 @@ tokens = {
     "ELIF",  # The elif keyword.
     "ELSE",  # The else keyword.
     "ENDIF",  # The endif keyword.
+    "EXTERN",  # The extern keyword.
 }
 
 # Defining the litteral tokens used in the compass language.

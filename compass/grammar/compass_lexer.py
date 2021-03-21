@@ -65,6 +65,7 @@ class CompassLexer(Lexer):
     NAME["elif"] = ELIF
     NAME["else"] = ELSE
     NAME["endif"] = ENDIF
+    NAME["extern"] = EXTERN
 
     # We keep track of newlines to count them.
     @_(r"\n+")

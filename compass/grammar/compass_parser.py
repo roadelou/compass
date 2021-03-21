@@ -68,8 +68,30 @@ class CompassParser(Parser):
     # The final rule, which returns an AST from the Module.
     @_("module")
     def ast(self, p):
-        # Returning an AST from the Module.
-        return ast.Tree(p.module)
+        # Returning an AST from the Module with no extern declarations.
+        return ast.Tree(p.module, list_extern=list())
+
+    # Other final rule, which returns an AST from the Module and the extern
+    # declarations.
+    @_("list_extern module")
+    def ast(self, p):
+        # Returning an AST from the Module with the extern declarations.
+        return ast.Tree(p.module, p.list_extern)
+
+    # Making a list with a single extern declaration with the extern keyword.
+    @_('EXTERN NAME "(" list_declaration ")"')
+    def list_extern(self, p):
+        return [ast.Extern(p.NAME, p.list_declaration)]
+
+    # Joining two lists of extern modules with a ";".
+    @_('list_extern ";" list_extern')
+    def list_extern(self, p):
+        return p.list_extern0 + p.list_extern1
+
+    # Optional last ";" for list of extern declarations.
+    @_('list_extern ";"')
+    def list_extern(self, p):
+        return p.list_extern
 
     # Building a Module from Name + Declarations + Body. The most complex rule
     # in the AST.
