@@ -19,7 +19,7 @@ syn case ignore
 syn keyword compassIO input output
 syn keyword compassStatement each seq par await emit local
 syn keyword compassStatement if elif else endif
-syn keyword compassModule module endmodule
+syn keyword compassModule module endmodule submodule extern
 " Operators and special characters
 syn match compassSpecial ","
 syn match compassSpecial ";"
