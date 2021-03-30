@@ -1,0 +1,10 @@
+{
+	"entry_point": "cascade_abro",
+	"debug": true,
+	"source_directory": "examples",
+	"build_directory": "test/files/cascade_abro",
+	"modules": {
+		"cascade_abro": ["cascade_abro"],
+		"abro": ["abro", "abro2"]
+	}
+}
