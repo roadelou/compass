@@ -6,7 +6,7 @@ __Compass__ :compass: is a small programming language with strong inpiration fro
 
 Unlike Esterel, Compass is very bare bones and uses a rather trivial compilation process, which can lead to very different behaviours for code that looks similar.
 
-The __ABRO__ code example adapted for Compass looks like :arrow_down_small:
+The __ABRO__ code example adapted for Compass looks like:
 
 ```
 module abro(input A, input B, input R, output O)
@@ -22,7 +22,7 @@ endmodule
 
 # Installation
 
-The Compass compiler is distributed as a Python source package. To install it, one can run :arrow_down_small:
+The Compass compiler is distributed as a Python source package. To install it, one can run:
 
 ```bash
 # Fetch the source code
@@ -37,7 +37,7 @@ A [PyPi package](https://pypi.org/project/roadelou-compass/) is also available f
 
 # Usage
 
-Once the compiler is installed, it can be used from the terminal through the `compass` command. Basic usage is :arrow_down_small:
+Once the compiler is installed, it can be used from the terminal through the `compass` command. Basic usage is:
 
 ```bash
 # This will output a C file called abro_compass.c
@@ -51,6 +51,19 @@ compass --lang debug abro.cmps
 # Examples
 
 Some examples of the language can be found in the [examples](https://github.com/roadelou/compass/tree/master/examples) folder.
+
+# Compass Builder
+
+__Compass Builder__ is a small tool provided by the package to automate the compilation of projects with submodules. It takes a _JSON_ file describing the project as input and outputs a _Makefile_ to automate the compilation of the project.
+
+:bulb: For an example JSON description of a project, see [cascade_abro.json](https://github.com/roadelou/compass/tree/master/examples/cascade_abro.json).
+
+Basic usage of compass-builder is:
+
+```bash
+# Creates a Makefile from the description given in project.json
+compass-builder project.json Makefile
+```
 
 # Features
 
