@@ -37,7 +37,7 @@ def main():
 
     setup(
         name="roadelou-compass",
-        version="0.0.5",
+        version="0.0.6",
         author="roadelou",
         author_email="",
         packages=[
