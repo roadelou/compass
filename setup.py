@@ -60,6 +60,7 @@ def main():
         entry_points="""
         [console_scripts]
         compass=compass.frontend:command_line
+        compass-builder=compass.frontend:compass_builder
         """,
         description="Simple synchronous programming language",
         long_description=readme_content,

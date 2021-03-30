@@ -20,6 +20,8 @@
 # Internal imports
 from compass.frontend.driver import compass_compile
 from compass.frontend.command_line import command_line
+# We give a more explicit name to the compass-builder entry point.
+from compass.frontend.builder import command_line as compass_builder
 
 ################################### CLASSES ####################################
 
