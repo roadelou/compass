@@ -55,8 +55,8 @@ class CompassLexer(Lexer):
     HIGHERNEQ = r">"
     COMPLEMENT = r"~"
 
-    # Matcjing an hexadecimal value in compass.
-    HEXADECIMAL = r"0x\d+"
+    # Matching an hexadecimal value in compass.
+    HEXADECIMAL = r"0x[0-9a-fA-F]"
     # Matching a number, only integers are allowed in compass.
     NUMBER = r"\d+"
     # Matching any string, which is first assumed to be a name.
