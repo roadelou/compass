@@ -44,6 +44,8 @@ class CompassLexer(Lexer):
     AND = r"&&"
     OR = r"\|\|"
 
+    # Matcjing an hexadecimal value in compass.
+    HEXADECIMAL = r"0x\d+"
     # Matching a number, only integers are allowed in compass.
     NUMBER = r"\d+"
     # Matching any string, which is first assumed to be a name.

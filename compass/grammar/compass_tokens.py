@@ -40,6 +40,7 @@ tokens = {
     "AWAIT",  # await keyword.
     "ASSIGN",  # assignation symbol (<-).
     "EMIT",  # emit keyword.
+    "HEXADECIMAL",  # literal integer in hexadecimal format.
     "NUMBER",  # literal integer.
     "AND",  # && operator.
     "OR",  # || operator.

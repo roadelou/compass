@@ -231,6 +231,13 @@ class CompassParser(Parser):
     def expression(self, p):
         return ast.Number(p.NUMBER)
 
+    # Creating an expression from an isolated hexadecimal number.
+    @_("HEXADECIMAL")
+    def expression(self, p):
+        # We have to parse the hexadecimal to an int then turn it back into a
+        # string.
+        return ast.Number(str(int(p.HEXADECIMAL, 16)))
+
     # Creating an expression from an isolated signal (for complex expressions).
     @_("signal")
     def expression(self, p):
