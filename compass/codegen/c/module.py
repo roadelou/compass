@@ -49,6 +49,10 @@ def codegen_module(module: ast.Module) -> Tuple[str, List[str], List[str]]:
      - The local variables that have to be statically allocated for the module.
     """
     source_code = ""
+
+    # Compiling the code that goes inside of the module.
+    ic = codegen_statement(module.statement, OuterContext(indent=1))
+
     # Adding the name of the module.
     source_code += f"void {module.name}("
     # Building the code for each declaration.
@@ -59,8 +63,26 @@ def codegen_module(module: ast.Module) -> Tuple[str, List[str], List[str]]:
     source_code += ", ".join(code_declarations)
     # Opening the brackets for the body of the code.
     source_code += ") {\n"
+
+    # Creating the pointers to the clk and never signals.
+    source_code += f"\tconst int *clk = &clock_constant;\n"
+    source_code += f"\tconst int *never = &never_constant;\n"
+
+    # Blank line for the style.
+    source_code += "\n"
+
+    # Allocating the pointers to all of the statically allocated locals on the
+    # stack. That way the pointer can be optimized out by the C compiler.
+    for local in ic.owned_locals:
+        source_code += f"\tint *{local} = &{local}_value;\n"
+    # If there are no locals, we add a small comment instead.
+    if len(ic.owned_locals) == 0:
+        source_code += "\t/* No locals for this code. */\n"
+    
+    # Blank line for the style.
+    source_code += "\n"
+
     # Adding the (indented) code for the body of the module.
-    ic = codegen_statement(module.statement, OuterContext(indent=1))
     source_code += ic.source_code
     # Closing the brackets.
     source_code += "}\n"

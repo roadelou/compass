@@ -52,16 +52,13 @@ def codegen_tree(tree: ast.Tree) -> str:
     # Creating the clock signal, which always evaluates to True.
     source_code += "\n"
     source_code += f"static const int clock_constant = 1;\n"
-    source_code += f"static const int *clk = &clock_constant;\n"
     # Creating the never signal, which always evaluates to False.
     source_code += f"static const int never_constant = 0;\n"
-    source_code += f"static const int *never = &never_constant;\n"
     source_code += "\n"
 
     # Creating all the locals as global signals for the code.
     for local in owned_locals:
         source_code += f"static int {local}_value = 0;\n"
-        source_code += f"static int *{local} = &{local}_value;\n"
     # If there are no locals, we add a small comment instead.
     if len(owned_locals) == 0:
         source_code += "/* No locals for this code. */\n"
