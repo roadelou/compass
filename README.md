@@ -74,7 +74,7 @@ The version of compass in the repository supports:
  - `each`, `par`, `seq`, `await` and `emit` statements
  - Conditional tests with `if`, `elif`, `else` and `endif`
  - The ability to use submodules within a module with the `extern` and `submodule` keywords
- - Many C-inspired operators for expressions
+ - Many C-inspired operators for expressions, including bitwise, arithmetic and boolean operators
 
 :warning: Be careful about the syntax for end-of lines. The `;` operator should only be used to separate several statements in a list of statements, i.e. only in `seq` and `par` blocks. The last `;` is optional by the way.
 
