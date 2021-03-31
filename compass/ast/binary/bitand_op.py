@@ -4,7 +4,7 @@
 
 # Contributors: roadelou
 # Contacts:
-# Creation Date: 2021-03-14
+# Creation Date: 2021-03-31
 # Language: Python3
 
 ################################### IMPORTS ####################################
@@ -23,9 +23,9 @@ from compass.ast.binary.binary import Binary  # Used for inheritance
 ################################### CLASSES ####################################
 
 
-class TimesOp(Binary):
+class BitAndOp(Binary):
     """
-    Times operator used in complex expressions.
+    Bitwise And operator used in complex expressions.
     """
 
     pass
