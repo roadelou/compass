@@ -25,6 +25,7 @@ class NotOp(Unary):
     """
     Not used in complex expressions.
     """
+
     pass
 
 

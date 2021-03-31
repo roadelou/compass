@@ -4,7 +4,7 @@
 
 # Contributors: roadelou
 # Contacts:
-# Creation Date: 2021-03-14
+# Creation Date: 2021-03-31
 # Language: Python3
 
 ################################### IMPORTS ####################################
@@ -18,14 +18,18 @@
 
 
 # Internal imports
-from compass.ast.unary.unary import Unary
-from compass.ast.unary.not_op import NotOp
-from compass.ast.unary.uminus_op import UminusOp
-from compass.ast.unary.complement_op import ComplementOp
+from compass.ast.unary.unary import Unary  # Used for inheritance
 
 ################################### CLASSES ####################################
 
-# Your classes go here
+
+class ComplementOp(Unary):
+    """
+    Bitwise complement used in complex expressions.
+    """
+
+    pass
+
 
 ################################## FUNCTIONS ###################################
 

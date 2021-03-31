@@ -25,6 +25,7 @@ class UminusOp(Unary):
     """
     Unary minus used in complex expressions.
     """
+
     pass
 
 
