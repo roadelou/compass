@@ -68,6 +68,26 @@ def codegen_binary(expression: ast.Binary) -> str:
         return f"({left_code} == {right_code})"
     elif isinstance(expression, ast.TimesOp):
         return f"({left_code} * {right_code})"
+    elif isinstance(expression, ast.XorOp):
+        return f"({left_code} ^ {right_code})"
+    elif isinstance(expression, ast.LShiftOp):
+        return f"({left_code} << {right_code})"
+    elif isinstance(expression, ast.RShiftOp):
+        return f"({left_code} >> {right_code})"
+    elif isinstance(expression, ast.NotEqOp):
+        return f"({left_code} != {right_code})"
+    elif isinstance(expression, ast.LowerEqOp):
+        return f"({left_code} <= {right_code})"
+    elif isinstance(expression, ast.HigherEqOp):
+        return f"({left_code} >= {right_code})"
+    elif isinstance(expression, ast.LowerNotEqOp):
+        return f"({left_code} < {right_code})"
+    elif isinstance(expression, ast.HigherNotEqOp):
+        return f"({left_code} > {right_code})"
+    elif isinstance(expression, ast.BitAndOp):
+        return f"({left_code} & {right_code})"
+    elif isinstance(expression, ast.BitOrOp):
+        return f"({left_code} | {right_code})"
     else:
         raise ValueError(f"Unknown binary operator {expression}")
 
@@ -83,6 +103,8 @@ def codegen_unary(expression: ast.Unary) -> str:
         return f"(!{inner_code})"
     elif isinstance(expression, ast.UminusOp):
         return f"(-{inner_code})"
+    elif isinstance(expression, ast.ComplementOp):
+        return f"(~{inner_code})"
     else:
         raise ValueError(f"Unknown unary operator {expression}")
 

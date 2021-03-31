@@ -72,7 +72,12 @@ def codegen_tree(tree: ast.Tree) -> str:
     # We also have to declare all the extern submodules used here.
     for extern in tree.externs:
         # We build the source code for the arguments of the extern C function.
-        code_arguments = ", ".join([codegen_declaration(declaration) for declaration in extern.declarations])
+        code_arguments = ", ".join(
+            [
+                codegen_declaration(declaration)
+                for declaration in extern.declarations
+            ]
+        )
         # We add the source code for the extern C function declaration.
         source_code += f"extern void {extern.name}({code_arguments});\n"
     # If no extern submodules are used, we add a small comment instead.
