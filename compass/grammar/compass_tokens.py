@@ -51,6 +51,17 @@ tokens = {
     "ELSE",  # The else keyword.
     "ENDIF",  # The endif keyword.
     "EXTERN",  # The extern keyword.
+    "XOR",  # ^ operator.
+    "LSHIFT",  # >> operator.
+    "RSHIFT",  # << operator.
+    "NOTEQ",  # != operator.
+    "LOWEREQ",  # <= operator.
+    "HIGHEREQ",  # >= operator.
+    "LOWERNEQ",  # < operator.
+    "HIGHERNEQ",  # > operator.
+    "BITAND",  # & operator.
+    "BITOR",  # | operator.
+    "COMPLEMENT",  # ~ operator.
 }
 
 # Defining the litteral tokens used in the compass language.

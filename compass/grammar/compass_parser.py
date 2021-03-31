@@ -57,12 +57,20 @@ class CompassParser(Parser):
         ("left", ","),  # , is left associative, to solve conflicts
         ("left", ";"),  # , is left associative, to solve conflicts
         ("nonassoc", ASSIGN),
-        # The next operators are used for expressions.
-        ("nonassoc", TESTEQ),
-        ("left", OR, "+", "-"),
-        ("left", AND, "*", "/", "%"),
-        ("right", UMINUS),
-        ("right", "!"),
+        # The next operators are used for expressions. The order of precedence
+        # should be the same as in C, taken from "https://www.tutorialspoint.com
+        # /cprogramming/c_operators_precedence.html"
+        ("left", OR),
+        ("left", AND),
+        ("left", BITOR),
+        ("left", XOR),
+        ("left", BITAND),
+        ("left", TESTEQ, NOTEQ),
+        ("left", LOWERNEQ, LOWEREQ, HIGHERNEQ, HIGHEREQ),
+        ("left", LSHIFT, RSHIFT),
+        ("left", "+", "-"),
+        ("left", "*", "/", "%"),
+        ("right", UMINUS, COMPLEMENT, "!"),
     )
 
     # The final rule, which returns an AST from the Module.
@@ -276,10 +284,54 @@ class CompassParser(Parser):
     def expression(self, p):
         return ast.ModOp(p.expression0, p.expression1)
 
+    @_("expression XOR expression")
+    def expression(self, p):
+        return ast.XorOp(p.expression0, p.expression1)
+
+    @_("expression LSHIFT expression")
+    def expression(self, p):
+        return ast.LShiftOp(p.expression0, p.expression1)
+
+    @_("expression RSHIFT expression")
+    def expression(self, p):
+        return ast.RShiftOp(p.expression0, p.expression1)
+
+    @_("expression NOTEQ expression")
+    def expression(self, p):
+        return ast.NotEqOp(p.expression0, p.expression1)
+
+    @_("expression LOWEREQ expression")
+    def expression(self, p):
+        return ast.LowerEqOp(p.expression0, p.expression1)
+
+    @_("expression HIGHEREQ expression")
+    def expression(self, p):
+        return ast.HigherEqOp(p.expression0, p.expression1)
+
+    @_("expression LOWERNEQ expression")
+    def expression(self, p):
+        return ast.LowerNotEqOp(p.expression0, p.expression1)
+
+    @_("expression HIGHERNEQ expression")
+    def expression(self, p):
+        return ast.HigherNotEqOp(p.expression0, p.expression1)
+
+    @_("expression BITAND expression")
+    def expression(self, p):
+        return ast.BitAndOp(p.expression0, p.expression1)
+
+    @_("expression BITOR expression")
+    def expression(self, p):
+        return ast.BitOrOp(p.expression0, p.expression1)
+
     # Rules for unary operators.
     @_('"-" expression %prec UMINUS')
     def expression(self, p):
         return ast.UminusOp(p.expression)
+
+    @_("COMPLEMENT expression")
+    def expression(self, p):
+        return ast.ComplementOp(p.expression)
 
     @_('"!" expression')
     def expression(self, p):

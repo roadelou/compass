@@ -43,6 +43,17 @@ class CompassLexer(Lexer):
     TESTEQ = r"=="
     AND = r"&&"
     OR = r"\|\|"
+    BITAND = r"&"
+    BITOR = r"|"
+    XOR = r"^"
+    LSHIFT = r">>"
+    RSHIFT = r"<<"
+    NOTEQ = r"!="
+    LOWEREQ = r"<="
+    LOWERNEQ = r"<"
+    HIGHEREQ = r">="
+    HIGHERNEQ = r">"
+    COMPLEMENT = r"~"
 
     # Matcjing an hexadecimal value in compass.
     HEXADECIMAL = r"0x\d+"
