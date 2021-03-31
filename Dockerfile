@@ -3,7 +3,7 @@ FROM python:3.9
 
 # Various tools to help test the produced C code.
 RUN apt-get -y update
-RUN apt-get -y install vim clang git curl
+RUN apt-get -y install vim clang git curl build-essential
 
 # Using the recommended installation path
 WORKDIR /usr/src/app
