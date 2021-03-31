@@ -34,7 +34,7 @@ from compass.ast.binary.noteq_op import NotEqOp
 from compass.ast.binary.lowereq_op import LowerEqOp
 from compass.ast.binary.highereq_op import HigherEqOp
 from compass.ast.binary.lowerneq_op import LowerNotEqOp
-from compass.ast.binary.HigherNotEq_op import HigherNotEqOp
+from compass.ast.binary.higherneq_op import HigherNotEqOp
 from compass.ast.binary.bitand_op import BitAndOp
 from compass.ast.binary.bitor_op import BitOrOp
 
