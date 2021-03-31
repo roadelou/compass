@@ -1,0 +1,19 @@
+# This timer (initially not active) can be set with a number of cycles to wait.
+# It will output its signal once it has been called the right number of times.
+# The timer can be reset before it is done by providing a new non-zero delay.
+module timer(input delay, output done) each delay seq {
+	# A local signal used to remeber how many cycles we still have to wait
+	# between the calls.
+	local is_ready;
+	# We initialize is_ready to the number of cycles we have to wait.
+	emit is_ready <- delay;
+	par {
+		# Each time the timer gets called, we decrement the local signal.
+		emit is_ready <- is_ready - 1;
+		# We wait until is_ready reaches 0.
+		await is_ready == 0;
+	};
+	# Once the counter has reached 0, we emit the output signal.
+	emit done;
+}
+endmodule
