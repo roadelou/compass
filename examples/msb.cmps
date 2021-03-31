@@ -1,0 +1,3 @@
+module msb(input value, output msb)
+	emit msb <- (value ^ 0x80000000) >> 31
+endmodule
